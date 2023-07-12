@@ -13,7 +13,10 @@ fun main() = application {
         modules(mirrorCommentModule)
     }
 
-    Window(onCloseRequest = this::exitApplication) {
+    Window(
+        title = "MirrorComment",
+        onCloseRequest = this::exitApplication,
+    ) {
         MaterialTheme {
             Surface {
                 CommentViewerPage()
