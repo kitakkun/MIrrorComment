@@ -19,6 +19,7 @@ fun CommentViewerView(
     uiState: CommentViewerState,
     onUpdateLiveUrl: (String) -> Unit,
     onClickStart: () -> Unit,
+    onClickSettings: () -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -26,6 +27,7 @@ fun CommentViewerView(
                 liveUrl = uiState.rawLiveUrl,
                 onLiveUrlChange = onUpdateLiveUrl,
                 onClickStart = onClickStart,
+                onClickSettings = onClickSettings,
             )
         },
         modifier = Modifier.fillMaxSize(),

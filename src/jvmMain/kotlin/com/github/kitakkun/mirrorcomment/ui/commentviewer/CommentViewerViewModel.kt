@@ -112,4 +112,8 @@ class CommentViewerViewModel : CoroutineScope by DefaultScope(), KoinComponent {
         retrieveService?.dispose()
         retrieveService = null
     }
+
+    fun openSettings() {
+        TODO("Not yet implemented")
+    }
 }

@@ -17,5 +17,6 @@ fun CommentViewerPage(
         uiState = uiState,
         onUpdateLiveUrl = viewModel::updateLiveUrl,
         onClickStart = viewModel::startObserveComments,
+        onClickSettings = viewModel::openSettings,
     )
 }
