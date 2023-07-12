@@ -12,6 +12,7 @@ repositories {
     google()
     mavenCentral()
     maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+    maven("https://jitpack.io")
 }
 
 kotlin {
@@ -23,6 +24,15 @@ kotlin {
         val jvmMain by getting {
             dependencies {
                 implementation(compose.desktop.currentOs)
+                implementation("org.seleniumhq.selenium:selenium-java:4.10.0")
+                implementation("io.insert-koin:koin-core:3.1.2")
+
+                // kt-vox
+                implementation("com.github.kitakkun:kt-vox:0.0.2")
+                val retrofitVersion = "2.9.0"
+                implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
+                implementation("com.squareup.retrofit2:converter-scalars:$retrofitVersion")
+                implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
             }
         }
         val jvmTest by getting
