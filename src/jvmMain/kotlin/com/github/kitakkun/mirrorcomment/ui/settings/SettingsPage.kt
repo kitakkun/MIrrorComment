@@ -16,5 +16,7 @@ fun SettingsPage(
         onChangeSpeakingEnabled = viewModel::updateSpeakingEnabled,
         onChangeChromeDriverPath = viewModel::updateChromeDriverPath,
         onChangeVoiceVoxServerUrl = viewModel::updateVoiceVoxServerUrl,
+        onClickCancel = viewModel::closeSettingsWithoutSaving,
+        onClickApply = viewModel::applySettings,
     )
 }
