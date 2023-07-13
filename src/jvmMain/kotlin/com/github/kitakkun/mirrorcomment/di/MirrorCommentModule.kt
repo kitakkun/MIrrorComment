@@ -1,6 +1,7 @@
 package com.github.kitakkun.mirrorcomment.di
 
 import com.github.kitakkun.ktvox.api.KtVoxApi
+import com.github.kitakkun.mirrorcomment.preferences.SettingsPropertiesRepository
 import com.github.kitakkun.mirrorcomment.service.MirrativCommentRetrieveService
 import org.koin.dsl.module
 import org.openqa.selenium.chrome.ChromeDriver
@@ -28,4 +29,5 @@ val mirrorCommentModule = module {
             .build()
         retrofit.create(KtVoxApi::class.java)
     }
+    single<SettingsPropertiesRepository> { SettingsPropertiesRepository() }
 }
