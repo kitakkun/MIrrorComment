@@ -5,7 +5,8 @@ import com.github.kitakkun.mirrorcomment.model.MirrativComment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.openqa.selenium.By
 import org.openqa.selenium.chrome.ChromeDriver
