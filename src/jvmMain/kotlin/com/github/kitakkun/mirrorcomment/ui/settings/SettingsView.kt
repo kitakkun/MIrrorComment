@@ -47,6 +47,7 @@ fun SettingsView(
                         value = uiState.voiceVoxServerUrl,
                         onValueChange = onChangeVoiceVoxServerUrl,
                         modifier = Modifier.width(500.dp),
+                        placeholder = { Text("例）http://127.0.0.1:50021") },
                     )
                 }
             }
