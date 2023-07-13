@@ -29,11 +29,11 @@ fun SettingsView(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(text = "ChromeDriverのパス")
-                    Spacer(Modifier.width(16.dp))
+                    Spacer(Modifier.weight(1f))
                     TextField(
                         value = uiState.chromeDriverPath,
                         onValueChange = onChangeChromeDriverPath,
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.width(500.dp),
                     )
                 }
             }
@@ -42,11 +42,11 @@ fun SettingsView(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(text = "VOICEVOXサーバーのURL")
-                    Spacer(Modifier.width(16.dp))
+                    Spacer(Modifier.weight(1f))
                     TextField(
                         value = uiState.voiceVoxServerUrl,
                         onValueChange = onChangeVoiceVoxServerUrl,
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.width(500.dp),
                     )
                 }
             }
