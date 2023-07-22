@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.Error
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -27,15 +28,22 @@ fun SettingsView(
                 .weight(1f)
         ) {
             item {
+                Row() {
+                    Text(text = "新規コメントを読み上げる")
+                    Spacer(Modifier.weight(1f))
+                    Switch(checked = uiState.speakingEnabled, onCheckedChange = onChangeSpeakingEnabled)
+                }
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.alpha(if (uiState.speakingEnabled) 1f else 0.5f)
                 ) {
                     Text(text = "VOICEVOXサーバーのURL")
                     Spacer(Modifier.weight(1f))
                     TextField(
                         value = uiState.voiceVoxServerUrl,
                         onValueChange = onChangeVoiceVoxServerUrl,
-                        modifier = Modifier.width(500.dp),
+                        enabled = uiState.speakingEnabled,
+                        modifier = Modifier.width(400.dp),
                         placeholder = { Text("例）http://127.0.0.1:50021") },
                         trailingIcon = {
                             if (uiState.checkingVoiceVoxServer) {
@@ -67,13 +75,6 @@ fun SettingsView(
                             }
                         }
                     )
-                }
-            }
-            item {
-                Row() {
-                    Text(text = "新規コメントを読み上げる")
-                    Spacer(Modifier.weight(1f))
-                    Switch(checked = uiState.speakingEnabled, onCheckedChange = onChangeSpeakingEnabled)
                 }
             }
         }
