@@ -44,6 +44,8 @@ kotlin {
 
                 implementation("org.jetbrains.compose.material:material-icons-extended:1.4.1")
                 implementation("io.github.bonigarcia:webdrivermanager:5.0.3")
+
+                implementation("io.coil-kt:coil-compose:2.4.0")
             }
         }
         val jvmTest by getting
