@@ -42,6 +42,7 @@ kotlin {
                 // Transitions
                 implementation("cafe.adriel.voyager:voyager-transitions:$voyagerVersion")
 
+                implementation("org.jetbrains.compose.material:material-icons-extended:1.4.1")
             }
         }
         val jvmTest by getting

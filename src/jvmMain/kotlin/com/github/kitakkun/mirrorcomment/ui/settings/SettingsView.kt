@@ -4,6 +4,9 @@ import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Error
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,6 +51,35 @@ fun SettingsView(
                         onValueChange = onChangeVoiceVoxServerUrl,
                         modifier = Modifier.width(500.dp),
                         placeholder = { Text("例）http://127.0.0.1:50021") },
+                        trailingIcon = {
+                            if (uiState.checkingVoiceVoxServer) {
+                                CircularProgressIndicator()
+                            } else if (uiState.isVoiceVoxServerRunning) {
+                                Row {
+                                    Text(
+                                        text = "起動中",
+                                        color = MaterialTheme.colors.primary,
+                                    )
+                                    Icon(
+                                        imageVector = Icons.Default.Check,
+                                        contentDescription = "VOICEVOXサーバーが起動しています",
+                                        tint = MaterialTheme.colors.primary,
+                                    )
+                                }
+                            } else {
+                                Row {
+                                    Text(
+                                        text = "不正なURL",
+                                        color = MaterialTheme.colors.error,
+                                    )
+                                    Icon(
+                                        imageVector = Icons.Default.Error,
+                                        contentDescription = "VOICEVOXサーバーが起動していません",
+                                        tint = MaterialTheme.colors.error,
+                                    )
+                                }
+                            }
+                        }
                     )
                 }
             }

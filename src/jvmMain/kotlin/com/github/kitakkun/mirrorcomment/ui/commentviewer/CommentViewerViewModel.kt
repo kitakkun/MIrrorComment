@@ -4,6 +4,7 @@ import com.github.kitakkun.ktvox.api.KtVoxApi
 import com.github.kitakkun.mirrorcomment.AudioPlayer
 import com.github.kitakkun.mirrorcomment.coroutines.DefaultScope
 import com.github.kitakkun.mirrorcomment.model.MirrativComment
+import com.github.kitakkun.mirrorcomment.preferences.SettingsPropertiesRepository
 import com.github.kitakkun.mirrorcomment.service.MirrativCommentRetrieveService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
@@ -24,7 +25,8 @@ class CommentViewerViewModel(
     val uiState = mutableUiState.asStateFlow()
 
     private var retrieveService: MirrativCommentRetrieveService? = null
-    private val ktVoxApi: KtVoxApi by inject()
+    private val settingsPropertiesRepository: SettingsPropertiesRepository by inject()
+    private val ktVoxApi: KtVoxApi by inject { parametersOf(settingsPropertiesRepository.getVoiceVoxServerUrl()) }
 
     private val mutableReadUpCommentFlow = MutableSharedFlow<MirrativComment>()
 

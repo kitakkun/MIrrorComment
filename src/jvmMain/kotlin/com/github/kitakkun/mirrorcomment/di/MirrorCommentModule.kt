@@ -20,8 +20,8 @@ val mirrorCommentModule = module {
     factory<MirrativCommentRetrieveService> { (liveId: String) ->
         MirrativCommentRetrieveService(get(), liveId)
     }
-    single<KtVoxApi> {
-        KtVoxApi.initialize("http://127.0.0.1:50021")
+    factory<KtVoxApi> {(serverUrl: String) ->
+        KtVoxApi.initialize(serverUrl)
     }
     single<SettingsPropertiesRepository> { SettingsPropertiesRepository() }
     single { AudioPlayer() }
