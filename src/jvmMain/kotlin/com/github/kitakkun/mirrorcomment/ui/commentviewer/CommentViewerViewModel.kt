@@ -7,7 +7,6 @@ import com.github.kitakkun.mirrorcomment.model.MirrativComment
 import com.github.kitakkun.mirrorcomment.service.MirrativCommentRetrieveService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,7 +16,6 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
-import javax.sound.sampled.AudioSystem
 
 class CommentViewerViewModel(
     private val player: AudioPlayer,
@@ -41,50 +39,24 @@ class CommentViewerViewModel(
         val liveId = uiState.value.rawLiveUrl.split("/").last()
         retrieveService = get { parametersOf(liveId) }
         launch {
-            retrieveService?.commentFlow?.collect { newComments ->
-                // 汚いので簡単に説明
-                // コメントが読み込まれるたびに既存のIDが上書きされる
-                // そのため、現在ローカルで保持しているコメントの中で最新のコメントを取得し、
-                // そのコメントが新しいコメントの中にあるかどうかで分岐する
-                val localComments = uiState.value.comments
-                val latestComment = localComments.firstOrNull()
-                val latestCommentOnNewComments =
-                    newComments.find { it.comment == latestComment?.comment && it.username == latestComment.username }
-                val addedComments = if (latestCommentOnNewComments != null) {
-                    newComments.takeWhile { it.id != latestCommentOnNewComments.id }
-                } else {
-                    newComments
-                }
-                // 音声読み上げ
-                addedComments.take(5).forEach {
-                    mutableReadUpCommentFlow.emit(it)
-                }
-                mutableUiState.update {
-                    it.copy(comments = addedComments + it.comments)
-                }
+            retrieveService?.newCommentsFlow?.collect { newComments ->
+                mutableUiState.update { it.copy(comments = it.comments + newComments) }
+                newComments.forEach { mutableReadUpCommentFlow.emit(it) }
             }
         }
         launch {
             mutableReadUpCommentFlow.collect {
                 val audioQuery =
-                    ktVoxApi.createAudioQuery(text = "${it.username} ${it.comment}", speaker = 0).body()
-                        ?: return@collect
-                val wave = ktVoxApi.postSynthesis(speaker = 0, audioQuery = audioQuery).body() ?: return@collect
+                    ktVoxApi.createAudioQuery(
+                        text = "${it.username} ${it.comment}",
+                        speaker = 0
+                    ).body() ?: return@collect
+                val wave = ktVoxApi.postSynthesis(
+                    speaker = 0,
+                    audioQuery = audioQuery,
+                ).body() ?: return@collect
                 player.play(wave.bytes())
             }
-        }
-    }
-
-    private suspend fun playAudio(bytes: ByteArray) {
-        val audioInputStream = AudioSystem.getAudioInputStream(bytes.inputStream())
-        val clip = AudioSystem.getClip().apply {
-            open(audioInputStream)
-            start()
-        }
-
-        // 音声が終わるまで待機
-        while (clip.isActive) {
-            delay(1000) // 1秒待つ
         }
     }
 

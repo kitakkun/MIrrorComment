@@ -5,14 +5,11 @@ import com.github.kitakkun.mirrorcomment.model.MirrativComment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import org.openqa.selenium.By
 import org.openqa.selenium.chrome.ChromeDriver
-import org.openqa.selenium.support.ui.ExpectedConditions
-import org.openqa.selenium.support.ui.WebDriverWait
-import java.time.Duration
 
 class MirrativCommentRetrieveService(
     private val driver: ChromeDriver,
@@ -25,23 +22,27 @@ class MirrativCommentRetrieveService(
 
     private val url: String get() = "$BASE_URL$liveId?lang=ja"
 
-    private val mutableCommentFlow = MutableStateFlow<List<MirrativComment>>(emptyList())
-    val commentFlow = mutableCommentFlow.asStateFlow()
+    private val mutableNewCommentsFlow = MutableSharedFlow<List<MirrativComment>>()
+    val newCommentsFlow = mutableNewCommentsFlow.asSharedFlow()
+
+    private var loadedCommentSize = 0
 
     init {
         driver.get(url)
-        WebDriverWait(driver, Duration.ofSeconds(10))
-            .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("._comment_6t3be_3")))
         launch {
             while (true) {
-                val comments = driver.findElements(By.cssSelector("._comment_6t3be_3"))
-                    .mapNotNull { comment -> MirrativComment.convert(comment) }
-                mutableCommentFlow.emit(comments)
+                // ページ読み込み後新規で追加されたコメントを取得
+                // dropはすでに取得済みのコメントを削除するため
+                val newComments = driver
+                    .findElements(By.cssSelector("._commentEnterActive_6t3be_16"))
+                    .dropLast(loadedCommentSize) // すでに取得済みのコメントを除く
+                    .reversed() // 古い→新しい順にする
+                    .mapNotNull(MirrativComment::convert)
+                mutableNewCommentsFlow.emit(newComments)
+                loadedCommentSize += newComments.size
                 delay(RETRIEVE_INTERVAL_MILLIS)
                 if (isNeedToBeRefreshed()) {
                     driver.navigate().refresh()
-                    WebDriverWait(driver, Duration.ofSeconds(10))
-                        .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("._comment_6t3be_3")))
                 }
             }
         }

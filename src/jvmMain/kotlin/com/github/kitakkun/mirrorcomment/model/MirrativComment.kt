@@ -18,9 +18,9 @@ sealed interface MirrativComment {
                 val isGiftComment = comment.findElements(By.cssSelector("._commentGift_1m6ac_3")).isNotEmpty()
 
                 // ユーザーネームを取得
-                val username = if(isGiftComment) {
+                val username = if (isGiftComment) {
                     comment.findElement(By.cssSelector("._commentGift_1m6ac_3 a span:first-child")).text.dropLast(1)
-                }else{
+                } else {
                     comment.findElement(By.cssSelector("._commentUserName_6t3be_32")).text
                 }
 

@@ -36,7 +36,7 @@ fun CommentViewerView(
             contentPadding = innerPadding,
             modifier = Modifier.fillMaxSize()
         ) {
-            items(uiState.comments) { comment ->
+            items(uiState.comments.asReversed()) { comment ->
                 Row(
                     modifier = Modifier.animateItemPlacement(),
                 ) {
