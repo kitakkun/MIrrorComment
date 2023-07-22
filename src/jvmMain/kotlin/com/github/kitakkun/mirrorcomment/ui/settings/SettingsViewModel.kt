@@ -23,7 +23,6 @@ class SettingsViewModel : KoinComponent, CoroutineScope by DefaultScope() {
     private var voiceVoxServerCheckJob: Job? = null
 
     private fun checkVoiceVoxServerStatus(url: String) {
-        println("checkVoiceVoxServerStatus: $url")
         voiceVoxServerCheckJob?.cancel()
         voiceVoxServerCheckJob = async {
             mutableUiState.update { it.copy(checkingVoiceVoxServer = true) }
