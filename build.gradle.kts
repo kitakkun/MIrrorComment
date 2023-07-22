@@ -29,6 +29,8 @@ kotlin {
 
                 // kt-vox
                 implementation("com.github.kitakkun:kt-vox:0.0.3")
+                val retrofitVersion = "2.9.0"
+                implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
             }
         }
         val jvmTest by getting
