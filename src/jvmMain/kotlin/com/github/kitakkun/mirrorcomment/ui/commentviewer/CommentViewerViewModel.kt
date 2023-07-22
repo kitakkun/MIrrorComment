@@ -66,8 +66,4 @@ class CommentViewerViewModel(
         retrieveService?.dispose()
         retrieveService = null
     }
-
-    fun openSettings() {
-        TODO("Not yet implemented")
-    }
 }
