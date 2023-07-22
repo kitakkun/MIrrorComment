@@ -28,6 +28,7 @@ fun CommentViewerView(
                 onLiveUrlChange = onUpdateLiveUrl,
                 onClickStart = onClickStart,
                 onClickSettings = onClickSettings,
+                modifier= Modifier.padding(8.dp)
             )
         },
         modifier = Modifier.fillMaxSize(),
