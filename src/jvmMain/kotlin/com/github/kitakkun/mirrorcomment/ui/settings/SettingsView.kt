@@ -7,6 +7,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Error
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,11 +26,31 @@ fun SettingsView(
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f)
+                .weight(1f),
+            contentPadding = PaddingValues(16.dp),
         ) {
             item {
-                Row() {
-                    Text(text = "新規コメントを読み上げる")
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Settings,
+                        contentDescription = "設定",
+                        modifier = Modifier.size(32.dp),
+                    )
+                    Spacer(Modifier.width(8.dp))
+                    Text(
+                        text = "設定",
+                        style = MaterialTheme.typography.h5,
+                    )
+                }
+                Spacer(Modifier.height(16.dp))
+            }
+            item {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(text = "コメントを読み上げる")
                     Spacer(Modifier.weight(1f))
                     Switch(checked = uiState.speakingEnabled, onCheckedChange = onChangeSpeakingEnabled)
                 }
@@ -79,11 +100,14 @@ fun SettingsView(
             }
         }
         Row(
-            modifier = Modifier.align(Alignment.End)
+            modifier = Modifier
+                .align(Alignment.End)
+                .padding(16.dp)
         ) {
             OutlinedButton(onClick = onClickCancel) {
                 Text("キャンセル")
             }
+            Spacer(Modifier.width(8.dp))
             Button(onClick = onClickApply) {
                 Text("適用して閉じる")
             }
