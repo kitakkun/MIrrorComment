@@ -44,7 +44,6 @@ class SettingsViewModel : KoinComponent, CoroutineScope by DefaultScope() {
             it.copy(
                 speakingEnabled = settingsPropertiesRepository.getSpeakingEnabled(),
                 voiceVoxServerUrl = settingsPropertiesRepository.getVoiceVoxServerUrl(),
-                chromeDriverPath = settingsPropertiesRepository.getChromeDriverPath(),
             )
         }
         checkVoiceVoxServerStatus(uiState.value.voiceVoxServerUrl)
@@ -61,16 +60,9 @@ class SettingsViewModel : KoinComponent, CoroutineScope by DefaultScope() {
         checkVoiceVoxServerStatus(url)
     }
 
-    fun updateChromeDriverPath(path: String) {
-        mutableUiState.update {
-            it.copy(chromeDriverPath = path)
-        }
-    }
-
     fun applySettings() {
         settingsPropertiesRepository.setSpeakingEnabled(uiState.value.speakingEnabled)
         settingsPropertiesRepository.setVoiceVoxServerUrl(uiState.value.voiceVoxServerUrl)
-        settingsPropertiesRepository.setChromeDriverPath(uiState.value.chromeDriverPath)
     }
 }
 

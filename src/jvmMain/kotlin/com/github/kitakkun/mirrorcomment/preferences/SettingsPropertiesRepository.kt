@@ -16,15 +16,6 @@ class SettingsPropertiesRepository {
         }
     }
 
-    fun getChromeDriverPath(): String {
-        return properties.getProperty("chromeDriverPath", "")
-    }
-
-    fun setChromeDriverPath(path: String) {
-        properties.setProperty("chromeDriverPath", path)
-        properties.store(propertiesFile.outputStream(), null)
-    }
-
     fun getVoiceVoxServerUrl(): String {
         return properties.getProperty("voiceVoxServerUrl", "")
     }

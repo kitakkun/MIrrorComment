@@ -17,7 +17,6 @@ fun SettingsPage(
     SettingsView(
         uiState = uiState,
         onChangeSpeakingEnabled = viewModel::updateSpeakingEnabled,
-        onChangeChromeDriverPath = viewModel::updateChromeDriverPath,
         onChangeVoiceVoxServerUrl = viewModel::updateVoiceVoxServerUrl,
         onClickCancel = {
             navigator?.pop()

@@ -15,7 +15,6 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun SettingsView(
     uiState: SettingsState,
-    onChangeChromeDriverPath: (String) -> Unit,
     onChangeSpeakingEnabled: (Boolean) -> Unit,
     onChangeVoiceVoxServerUrl: (String) -> Unit,
     onClickCancel: () -> Unit,
@@ -27,19 +26,6 @@ fun SettingsView(
                 .fillMaxWidth()
                 .weight(1f)
         ) {
-            item {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Text(text = "ChromeDriverのパス")
-                    Spacer(Modifier.weight(1f))
-                    TextField(
-                        value = uiState.chromeDriverPath,
-                        onValueChange = onChangeChromeDriverPath,
-                        modifier = Modifier.width(500.dp),
-                    )
-                }
-            }
             item {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -109,11 +95,9 @@ fun SettingsView(
 private fun SettingsViewPreview() {
     SettingsView(
         uiState = SettingsState(
-            chromeDriverPath = "/path/to/chromedriver",
             voiceVoxServerUrl = "http://localhost:50021",
             speakingEnabled = true,
         ),
-        onChangeChromeDriverPath = {},
         onChangeVoiceVoxServerUrl = {},
         onChangeSpeakingEnabled = {},
         onClickCancel = {},
