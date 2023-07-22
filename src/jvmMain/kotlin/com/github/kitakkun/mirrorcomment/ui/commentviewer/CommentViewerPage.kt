@@ -1,11 +1,14 @@
 package com.github.kitakkun.mirrorcomment.ui.commentviewer
 
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import com.github.kitakkun.mirrorcomment.ui.CommentViewerView
 
 @Composable
 fun CommentViewerPage(
-    viewModel: CommentViewerViewModel = remember { CommentViewerViewModel() },
+    viewModel: CommentViewerViewModel
 ) {
     val uiState by viewModel.uiState.collectAsState()
 

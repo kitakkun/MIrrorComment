@@ -1,22 +1,27 @@
 package com.github.kitakkun.mirrorcomment.ui.commentviewer
 
 import com.github.kitakkun.ktvox.api.KtVoxApi
+import com.github.kitakkun.mirrorcomment.AudioPlayer
 import com.github.kitakkun.mirrorcomment.coroutines.DefaultScope
 import com.github.kitakkun.mirrorcomment.model.MirrativComment
 import com.github.kitakkun.mirrorcomment.service.MirrativCommentRetrieveService
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
-import java.io.File
 import javax.sound.sampled.AudioSystem
 
-class CommentViewerViewModel : CoroutineScope by DefaultScope(), KoinComponent {
+class CommentViewerViewModel(
+    private val player: AudioPlayer,
+) : CoroutineScope by DefaultScope(), KoinComponent {
     private val mutableUiState = MutableStateFlow(CommentViewerState(rawLiveUrl = ""))
     val uiState = mutableUiState.asStateFlow()
 
@@ -24,32 +29,6 @@ class CommentViewerViewModel : CoroutineScope by DefaultScope(), KoinComponent {
     private val ktVoxApi: KtVoxApi by inject()
 
     private val mutableReadUpCommentFlow = MutableSharedFlow<MirrativComment>()
-    private val mutableAudioPlayFlow = MutableSharedFlow<ByteArray>()
-
-    init {
-        launch {
-            withContext(Dispatchers.IO) {
-                mutableAudioPlayFlow.collect {
-                    val waveFile = File("temp.wav")
-                    waveFile.writeBytes(it)
-                    val job = async {
-                        try {
-                            val audioInputStream = AudioSystem.getAudioInputStream(waveFile)
-                            val clip = AudioSystem.getClip()
-                            clip.open(audioInputStream)
-                            clip.start()
-                            delay(clip.microsecondLength /1000)
-                            audioInputStream.close()
-                            clip.close()
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                        }
-                    }
-                    job.await()
-                }
-            }
-        }
-    }
 
     fun updateLiveUrl(liveUrl: String) {
         mutableUiState.update {
@@ -93,7 +72,7 @@ class CommentViewerViewModel : CoroutineScope by DefaultScope(), KoinComponent {
                         ?: return@collect
                 val wave = ktVoxApi.postSynthesis(speaker = 0, audioQuery = audioQuery).body() ?: return@collect
                 println("Speak")
-                mutableAudioPlayFlow.emit(wave.bytes())
+                player.play(wave.bytes())
             }
         }
     }

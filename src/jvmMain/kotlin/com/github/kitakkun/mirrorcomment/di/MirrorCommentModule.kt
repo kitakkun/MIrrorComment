@@ -1,8 +1,10 @@
 package com.github.kitakkun.mirrorcomment.di
 
 import com.github.kitakkun.ktvox.api.KtVoxApi
+import com.github.kitakkun.mirrorcomment.AudioPlayer
 import com.github.kitakkun.mirrorcomment.preferences.SettingsPropertiesRepository
 import com.github.kitakkun.mirrorcomment.service.MirrativCommentRetrieveService
+import com.github.kitakkun.mirrorcomment.ui.commentviewer.CommentViewerViewModel
 import org.koin.dsl.module
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
@@ -22,4 +24,6 @@ val mirrorCommentModule = module {
         KtVoxApi.initialize("http://127.0.0.1:50021")
     }
     single<SettingsPropertiesRepository> { SettingsPropertiesRepository() }
+    single { AudioPlayer() }
+    factory { CommentViewerViewModel(get()) }
 }
