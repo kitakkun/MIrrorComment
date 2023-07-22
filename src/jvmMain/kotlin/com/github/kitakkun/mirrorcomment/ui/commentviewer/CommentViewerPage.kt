@@ -4,13 +4,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import com.github.kitakkun.mirrorcomment.ui.CommentViewerView
+import cafe.adriel.voyager.navigator.LocalNavigator
+import com.github.kitakkun.mirrorcomment.ui.settings.SettingsScreen
 
 @Composable
 fun CommentViewerPage(
-    viewModel: CommentViewerViewModel
+    viewModel: CommentViewerViewModel,
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val navigator = LocalNavigator.current
 
     DisposableEffect(Unit) {
         onDispose { viewModel.dispose() }
@@ -20,6 +22,8 @@ fun CommentViewerPage(
         uiState = uiState,
         onUpdateLiveUrl = viewModel::updateLiveUrl,
         onClickStart = viewModel::startObserveComments,
-        onClickSettings = viewModel::openSettings,
+        onClickSettings = {
+            navigator?.push(SettingsScreen)
+        }
     )
 }

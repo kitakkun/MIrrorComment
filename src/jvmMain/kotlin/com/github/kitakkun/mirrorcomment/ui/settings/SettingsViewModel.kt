@@ -36,8 +36,4 @@ class SettingsViewModel : KoinComponent {
         settingsPropertiesRepository.setVoiceVoxServerUrl(uiState.value.voiceVoxServerUrl)
         settingsPropertiesRepository.setChromeDriverPath(uiState.value.chromeDriverPath)
     }
-
-    fun closeSettingsWithoutSaving() {
-
-    }
 }

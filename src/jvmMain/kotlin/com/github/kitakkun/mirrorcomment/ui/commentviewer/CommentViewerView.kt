@@ -1,4 +1,4 @@
-package com.github.kitakkun.mirrorcomment.ui
+package com.github.kitakkun.mirrorcomment.ui.commentviewer
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.github.kitakkun.mirrorcomment.ui.commentviewer.CommentViewerState
+import com.github.kitakkun.mirrorcomment.ui.TopToolBar
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
