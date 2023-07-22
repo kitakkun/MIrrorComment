@@ -31,6 +31,17 @@ kotlin {
                 implementation("com.github.kitakkun:kt-vox:0.0.3")
                 val retrofitVersion = "2.9.0"
                 implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
+
+                val voyagerVersion = "1.0.0-rc06"
+                // Navigator
+                implementation("cafe.adriel.voyager:voyager-navigator:$voyagerVersion")
+                // BottomSheetNavigator
+                implementation("cafe.adriel.voyager:voyager-bottom-sheet-navigator:$voyagerVersion")
+                // TabNavigator
+                implementation("cafe.adriel.voyager:voyager-tab-navigator:$voyagerVersion")
+                // Transitions
+                implementation("cafe.adriel.voyager:voyager-transitions:$voyagerVersion")
+
             }
         }
         val jvmTest by getting
