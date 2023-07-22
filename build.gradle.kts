@@ -28,11 +28,7 @@ kotlin {
                 implementation("io.insert-koin:koin-core:3.1.2")
 
                 // kt-vox
-                implementation("com.github.kitakkun:kt-vox:0.0.2")
-                val retrofitVersion = "2.9.0"
-                implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
-                implementation("com.squareup.retrofit2:converter-scalars:$retrofitVersion")
-                implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
+                implementation("com.github.kitakkun:kt-vox:0.0.3")
             }
         }
         val jvmTest by getting
