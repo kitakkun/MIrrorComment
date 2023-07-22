@@ -15,7 +15,6 @@ import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
 import java.io.File
 import javax.sound.sampled.AudioSystem
-import kotlin.concurrent.thread
 
 class CommentViewerViewModel : CoroutineScope by DefaultScope(), KoinComponent {
     private val mutableUiState = MutableStateFlow(CommentViewerState(rawLiveUrl = ""))
@@ -33,19 +32,20 @@ class CommentViewerViewModel : CoroutineScope by DefaultScope(), KoinComponent {
                 mutableAudioPlayFlow.collect {
                     val waveFile = File("temp.wav")
                     waveFile.writeBytes(it)
-                    thread(name = "Speak") {
+                    val job = async {
                         try {
                             val audioInputStream = AudioSystem.getAudioInputStream(waveFile)
                             val clip = AudioSystem.getClip()
                             clip.open(audioInputStream)
                             clip.start()
-                            Thread.sleep(clip.microsecondLength / 1000)
+                            delay(clip.microsecondLength /1000)
                             audioInputStream.close()
                             clip.close()
                         } catch (e: Exception) {
                             e.printStackTrace()
                         }
                     }
+                    job.await()
                 }
             }
         }
