@@ -13,6 +13,16 @@ class SettingsViewModel : KoinComponent {
     private val mutableUiState = MutableStateFlow(SettingsState())
     val uiState = mutableUiState.asStateFlow()
 
+    fun fetchSettings() {
+        mutableUiState.update {
+            it.copy(
+                speakingEnabled = settingsPropertiesRepository.getSpeakingEnabled(),
+                voiceVoxServerUrl = settingsPropertiesRepository.getVoiceVoxServerUrl(),
+                chromeDriverPath = settingsPropertiesRepository.getChromeDriverPath(),
+            )
+        }
+    }
+
     fun updateSpeakingEnabled(enabled: Boolean) {
         mutableUiState.update {
             it.copy(speakingEnabled = enabled)

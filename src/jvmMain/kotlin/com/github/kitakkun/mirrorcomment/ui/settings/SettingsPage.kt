@@ -1,9 +1,6 @@
 package com.github.kitakkun.mirrorcomment.ui.settings
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import cafe.adriel.voyager.navigator.LocalNavigator
 
 @Composable
@@ -12,6 +9,10 @@ fun SettingsPage(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val navigator = LocalNavigator.current
+
+    LaunchedEffect(Unit) {
+        viewModel.fetchSettings()
+    }
 
     SettingsView(
         uiState = uiState,
