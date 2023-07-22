@@ -66,12 +66,10 @@ class CommentViewerViewModel(
         }
         launch {
             mutableReadUpCommentFlow.collect {
-                println("Collect")
                 val audioQuery =
                     ktVoxApi.createAudioQuery(text = "${it.username} ${it.comment}", speaker = 0).body()
                         ?: return@collect
                 val wave = ktVoxApi.postSynthesis(speaker = 0, audioQuery = audioQuery).body() ?: return@collect
-                println("Speak")
                 player.play(wave.bytes())
             }
         }

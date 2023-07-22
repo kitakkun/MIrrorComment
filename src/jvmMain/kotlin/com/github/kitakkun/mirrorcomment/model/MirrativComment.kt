@@ -40,7 +40,6 @@ sealed interface MirrativComment {
                 val isBotComment = username == "Mirrativ bot"
 
                 return if (isBotComment) {
-                    println("Bot comment: $commentText")
                     Bot(commentId, username, commentText, avatarUrl)
                 } else if (isGiftComment) {
                     Gift(
@@ -50,7 +49,6 @@ sealed interface MirrativComment {
                         avatarUrl = avatarUrl,
                     )
                 } else if (isEnterComment) {
-                    println("Enter comment: $commentText")
                     Enter(
                         id = commentId,
                         username = username,
