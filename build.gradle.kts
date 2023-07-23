@@ -3,6 +3,7 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 plugins {
     kotlin("multiplatform")
     id("org.jetbrains.compose")
+    alias(libs.plugins.about.libraries)
 }
 
 group = "com.github.kitakkun.mirrorcomment"
@@ -42,6 +43,8 @@ kotlin {
 
                 implementation(libs.compose.color.picker)
                 implementation(libs.compose.color.picker.jvm)
+                implementation(libs.about.libraries.core)
+                implementation(libs.about.libraries.compose)
             }
         }
         val jvmTest by getting
@@ -57,4 +60,8 @@ compose.desktop {
             packageVersion = "1.0.0"
         }
     }
+}
+
+aboutLibraries {
+    registerAndroidTasks = false
 }

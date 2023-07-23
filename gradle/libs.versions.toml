@@ -7,6 +7,7 @@ kxvox = "0.0.3"
 compose = "1.4.1"
 webdrivermanager = "5.0.3"
 compose-color-picker = "0.7.0"
+about-libraries = "10.8.3"
 
 [libraries]
 selenium = { group = "org.seleniumhq.selenium", name = "selenium-java", version.ref = "selenium" }
@@ -21,4 +22,8 @@ material-icons-extended = { group = "org.jetbrains.compose.material", name = "ma
 webdrivermanager = { group = "io.github.bonigarcia", name = "webdrivermanager", version.ref = "webdrivermanager" }
 compose-color-picker = { group = "com.godaddy.android.colorpicker", name = "compose-color-picker", version.ref = "compose-color-picker" }
 compose-color-picker-jvm = { group = "com.godaddy.android.colorpicker", name = "compose-color-picker-jvm", version.ref = "compose-color-picker" }
+about-libraries-compose = { group = "com.mikepenz", name = "aboutlibraries-compose", version.ref = "about-libraries" }
+about-libraries-core = { group = "com.mikepenz", name = "aboutlibraries-core", version.ref = "about-libraries" }
 
+[plugins]
+about-libraries = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "about-libraries" }

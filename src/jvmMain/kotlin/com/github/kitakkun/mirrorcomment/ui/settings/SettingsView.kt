@@ -7,15 +7,14 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Error
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.navigator.LocalNavigator
 
 @Composable
 fun SettingsView(
@@ -27,6 +26,8 @@ fun SettingsView(
     onClickApply: () -> Unit,
 ) {
     var presetDropdownExpanded by remember { mutableStateOf(false) }
+
+    val navigator = LocalNavigator.current
 
     Column {
         LazyColumn(
@@ -144,6 +145,29 @@ fun SettingsView(
                             }
                         }
                     }
+                }
+            }
+            item {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .clickable {
+                            navigator?.push(LicenseScreen())
+                        }
+                        .padding(vertical = 16.dp)
+                        .fillMaxWidth()
+                ) {
+                    Text(text = "OSSライセンス")
+                    Spacer(Modifier.width(8.dp))
+                    Icon(
+                        imageVector = Icons.Default.Info,
+                        contentDescription = null,
+                    )
+                    Spacer(Modifier.weight(1f))
+                    Icon(
+                        imageVector = Icons.Default.ArrowForwardIos,
+                        contentDescription = null,
+                    )
                 }
             }
         }
