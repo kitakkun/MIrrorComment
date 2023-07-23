@@ -29,31 +29,57 @@ fun SettingsView(
 
     val navigator = LocalNavigator.current
 
-    Column {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Settings,
+                            contentDescription = "設定",
+                            modifier = Modifier.size(32.dp),
+                        )
+                        Spacer(Modifier.width(8.dp))
+                        Text(
+                            text = "設定",
+                            style = MaterialTheme.typography.h5,
+                        )
+                    }
+                },
+                navigationIcon = {
+                    IconButton(onClick = onClickCancel) {
+                        Icon(imageVector = Icons.Default.NavigateBefore, contentDescription = null)
+                    }
+                },
+            )
+        },
+        bottomBar = {
+            Row(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                OutlinedButton(onClick = onClickCancel) {
+                    Text("キャンセル")
+                }
+                Spacer(Modifier.width(8.dp))
+                Button(onClick = onClickApply) {
+                    Text("適用して閉じる")
+                }
+            }
+        },
+    ) { innerPadding ->
         LazyColumn(
             modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f),
-            contentPadding = PaddingValues(16.dp),
+                .padding(16.dp)
+                .fillMaxWidth(),
+            contentPadding = innerPadding,
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            item {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Settings,
-                        contentDescription = "設定",
-                        modifier = Modifier.size(32.dp),
-                    )
-                    Spacer(Modifier.width(8.dp))
-                    Text(
-                        text = "設定",
-                        style = MaterialTheme.typography.h5,
-                    )
-                }
-                Spacer(Modifier.height(16.dp))
-            }
             item {
                 Text(
                     text = "読み上げ",
@@ -173,19 +199,6 @@ fun SettingsView(
                         contentDescription = null,
                     )
                 }
-            }
-        }
-        Row(
-            modifier = Modifier
-                .align(Alignment.End)
-                .padding(16.dp)
-        ) {
-            OutlinedButton(onClick = onClickCancel) {
-                Text("キャンセル")
-            }
-            Spacer(Modifier.width(8.dp))
-            Button(onClick = onClickApply) {
-                Text("適用して閉じる")
             }
         }
     }
