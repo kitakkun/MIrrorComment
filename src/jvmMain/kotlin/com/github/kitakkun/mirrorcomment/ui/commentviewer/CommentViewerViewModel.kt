@@ -64,10 +64,4 @@ class CommentViewerViewModel(
             }
         }
     }
-
-    fun dispose() {
-        player.clearPlayQueue()
-        retrieveService?.dispose()
-        retrieveService = null
-    }
 }

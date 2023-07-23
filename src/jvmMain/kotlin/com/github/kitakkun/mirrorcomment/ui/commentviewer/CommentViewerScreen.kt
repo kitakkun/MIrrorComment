@@ -1,14 +1,14 @@
 package com.github.kitakkun.mirrorcomment.ui.commentviewer
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import cafe.adriel.voyager.core.screen.Screen
-import org.koin.java.KoinJavaComponent
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
 
-object CommentViewerScreen : Screen {
+class CommentViewerScreen : Screen, KoinComponent {
     @Composable
     override fun Content() {
-        val viewModel by remember { KoinJavaComponent.getKoin().inject<CommentViewerViewModel>() }
+        val viewModel = get<CommentViewerViewModel>()
         CommentViewerPage(viewModel = viewModel)
     }
 }

@@ -1,7 +1,6 @@
 package com.github.kitakkun.mirrorcomment.ui.commentviewer
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -13,10 +12,6 @@ fun CommentViewerPage(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val navigator = LocalNavigator.current
-
-    DisposableEffect(Unit) {
-        onDispose { viewModel.dispose() }
-    }
 
     CommentViewerView(
         uiState = uiState,

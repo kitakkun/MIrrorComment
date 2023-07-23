@@ -27,7 +27,7 @@ fun main() = application {
     ) {
         MaterialTheme {
             Surface {
-                Navigator(CommentViewerScreen)
+                Navigator(CommentViewerScreen())
             }
         }
     }

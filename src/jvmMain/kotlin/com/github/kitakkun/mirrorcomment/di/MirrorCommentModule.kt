@@ -25,5 +25,5 @@ val mirrorCommentModule = module {
     }
     single<SettingsPropertiesRepository> { SettingsPropertiesRepository() }
     single { AudioPlayer() }
-    factory { CommentViewerViewModel(get()) }
+    single { CommentViewerViewModel(get()) }
 }
