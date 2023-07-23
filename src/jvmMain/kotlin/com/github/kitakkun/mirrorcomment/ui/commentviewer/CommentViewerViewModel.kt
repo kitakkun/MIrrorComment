@@ -26,15 +26,18 @@ class CommentViewerViewModel(
     private val retrieveService: MirrativCommentRetrieveService by inject()
     private val settingsPropertiesRepository: SettingsPropertiesRepository by inject()
 
-    private var ktVoxApi: KtVoxApi
+    private var ktVoxApi: KtVoxApi? = null
     private var speakerId: Int = 0
     private var speakingEnabled: Boolean = true
 
     private val mutableReadUpCommentFlow = MutableSharedFlow<MirrativComment>()
 
     init {
-        val voiceVoxServerUrl = settingsPropertiesRepository.getVoiceVoxServerUrl()
-        ktVoxApi = get { parametersOf(voiceVoxServerUrl) }
+        try {
+            ktVoxApi = get { parametersOf(settingsPropertiesRepository.getVoiceVoxServerUrl()) }
+        } catch (e: Throwable) {
+            e.printStackTrace()
+        }
 
         launch {
             retrieveService.newCommentsFlow.collect { newComments ->
@@ -47,14 +50,14 @@ class CommentViewerViewModel(
             mutableReadUpCommentFlow.collect {
                 if (!speakingEnabled) return@collect
                 try {
-                    val audioQuery = ktVoxApi.createAudioQuery(
+                    val audioQuery = ktVoxApi?.createAudioQuery(
                         text = "${it.username} ${it.comment}",
                         speaker = speakerId,
-                    ).body() ?: return@collect
-                    val wave = ktVoxApi.postSynthesis(
+                    )?.body() ?: return@collect
+                    val wave = ktVoxApi?.postSynthesis(
                         speaker = speakerId,
                         audioQuery = audioQuery,
-                    ).body() ?: return@collect
+                    )?.body() ?: return@collect
                     player.play(wave.bytes())
                 } catch (e: Throwable) {
                     mutableVoiceVoxErrorFlow.emit(Unit)
@@ -78,12 +81,18 @@ class CommentViewerViewModel(
     fun applySettingsChanges() {
         val voiceVoxServerUrl = settingsPropertiesRepository.getVoiceVoxServerUrl()
         speakingEnabled = settingsPropertiesRepository.getSpeakingEnabled()
-        ktVoxApi = get { parametersOf(voiceVoxServerUrl) }
-        launch {
-            val speakers = ktVoxApi.getSpeakers().body() ?: return@launch
-            speakerId = speakers.indexOfFirst { speaker ->
-                speaker.speakerUuid == settingsPropertiesRepository.getSpeakerUUID()
-            }.coerceAtLeast(0)
+        try {
+            ktVoxApi = get { parametersOf(voiceVoxServerUrl) }
+            launch {
+                val speakers = ktVoxApi?.getSpeakers()?.body() ?: return@launch
+                speakerId = speakers.indexOfFirst { speaker ->
+                    speaker.speakerUuid == settingsPropertiesRepository.getSpeakerUUID()
+                }.coerceAtLeast(0)
+            }
+        } catch (e: Exception) {
+            launch {
+                mutableVoiceVoxErrorFlow.emit(Unit)
+            }
         }
     }
 }
