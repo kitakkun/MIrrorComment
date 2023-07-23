@@ -23,7 +23,7 @@ class AudioPlayer : CoroutineScope by IOScope() {
                         val clip = AudioSystem.getClip()
                         clip.open(audioInputStream)
                         clip.start()
-                        delay(clip.microsecondLength /1000)
+                        delay(clip.microsecondLength / 1000)
                         audioInputStream.close()
                         clip.close()
                     } catch (e: Exception) {
