@@ -8,10 +8,7 @@ import com.github.kitakkun.mirrorcomment.preferences.SettingsPropertiesRepositor
 import com.github.kitakkun.mirrorcomment.service.MirrativCommentRetrieveService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
@@ -24,11 +21,21 @@ class CommentViewerViewModel(
     private val mutableUiState = MutableStateFlow(CommentViewerState(rawLiveUrl = ""))
     val uiState = mutableUiState.asStateFlow()
 
+    private val mutableVoiceVoxErrorFlow = MutableSharedFlow<Unit>()
+    val voiceVoxErrorFlow = mutableVoiceVoxErrorFlow.asSharedFlow()
+
     private var retrieveService: MirrativCommentRetrieveService? = null
     private val settingsPropertiesRepository: SettingsPropertiesRepository by inject()
-    private val ktVoxApi: KtVoxApi by inject { parametersOf(settingsPropertiesRepository.getVoiceVoxServerUrl()) }
+
+    private var ktVoxApi: KtVoxApi
+    private var speakerId: Int = 0
 
     private val mutableReadUpCommentFlow = MutableSharedFlow<MirrativComment>()
+
+    init {
+        val voiceVoxServerUrl = settingsPropertiesRepository.getVoiceVoxServerUrl()
+        ktVoxApi = get { parametersOf(voiceVoxServerUrl) }
+    }
 
     fun updateLiveUrl(liveUrl: String) {
         mutableUiState.update {
@@ -49,20 +56,31 @@ class CommentViewerViewModel(
         }
         launch {
             mutableReadUpCommentFlow.collect {
-                val speakers = ktVoxApi.getSpeakers().body() ?: return@collect
-                val speakerId = speakers.indexOfFirst { speaker ->
-                    speaker.speakerUuid == settingsPropertiesRepository.getSpeakerUUID()
-                }.coerceAtLeast(0)
-                val audioQuery = ktVoxApi.createAudioQuery(
-                    text = "${it.username} ${it.comment}",
-                    speaker = speakerId,
-                ).body() ?: return@collect
-                val wave = ktVoxApi.postSynthesis(
-                    speaker = speakerId,
-                    audioQuery = audioQuery,
-                ).body() ?: return@collect
-                player.play(wave.bytes())
+                try {
+                    val audioQuery = ktVoxApi.createAudioQuery(
+                        text = "${it.username} ${it.comment}",
+                        speaker = speakerId,
+                    ).body() ?: return@collect
+                    val wave = ktVoxApi.postSynthesis(
+                        speaker = speakerId,
+                        audioQuery = audioQuery,
+                    ).body() ?: return@collect
+                    player.play(wave.bytes())
+                } catch (e: Throwable) {
+                    mutableVoiceVoxErrorFlow.emit(Unit)
+                }
             }
+        }
+    }
+
+    fun applySettingsChanges() {
+        val voiceVoxServerUrl = settingsPropertiesRepository.getVoiceVoxServerUrl()
+        ktVoxApi = get { parametersOf(voiceVoxServerUrl) }
+        launch {
+            val speakers = ktVoxApi.getSpeakers().body() ?: return@launch
+            speakerId = speakers.indexOfFirst { speaker ->
+                speaker.speakerUuid == settingsPropertiesRepository.getSpeakerUUID()
+            }.coerceAtLeast(0)
         }
     }
 }

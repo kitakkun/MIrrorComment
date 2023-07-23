@@ -8,6 +8,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Divider
 import androidx.compose.material.Scaffold
+import androidx.compose.material.SnackbarHost
+import androidx.compose.material.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -17,6 +19,7 @@ import com.github.kitakkun.mirrorcomment.ui.TopToolBar
 @Composable
 fun CommentViewerView(
     uiState: CommentViewerState,
+    snackbarHostState: SnackbarHostState,
     onUpdateLiveUrl: (String) -> Unit,
     onClickStart: () -> Unit,
     onClickSettings: () -> Unit,
@@ -31,6 +34,7 @@ fun CommentViewerView(
                 modifier = Modifier.padding(8.dp)
             )
         },
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         modifier = Modifier.fillMaxSize(),
     ) { innerPadding ->
         LazyColumn(

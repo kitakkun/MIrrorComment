@@ -1,10 +1,10 @@
 package com.github.kitakkun.mirrorcomment.ui.commentviewer
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.material.SnackbarHostState
+import androidx.compose.runtime.*
 import cafe.adriel.voyager.navigator.LocalNavigator
 import com.github.kitakkun.mirrorcomment.ui.settings.SettingsScreen
+import kotlinx.coroutines.launch
 
 @Composable
 fun CommentViewerPage(
@@ -12,6 +12,16 @@ fun CommentViewerPage(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val navigator = LocalNavigator.current
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(Unit) {
+        viewModel.applySettingsChanges()
+        launch {
+            viewModel.voiceVoxErrorFlow.collect {
+                snackbarHostState.showSnackbar("VOICEVOXサーバーでエラーが発生しました")
+            }
+        }
+    }
 
     CommentViewerView(
         uiState = uiState,
@@ -19,6 +29,7 @@ fun CommentViewerPage(
         onClickStart = viewModel::startObserveComments,
         onClickSettings = {
             navigator?.push(SettingsScreen)
-        }
+        },
+        snackbarHostState = snackbarHostState,
     )
 }
