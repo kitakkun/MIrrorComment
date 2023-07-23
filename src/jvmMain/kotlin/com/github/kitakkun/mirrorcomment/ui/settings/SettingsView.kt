@@ -15,7 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -24,21 +23,11 @@ fun SettingsView(
     onChangeSpeakingEnabled: (Boolean) -> Unit,
     onChangeVoiceVoxServerUrl: (String) -> Unit,
     onSpeakerUpdated: (String) -> Unit,
-    onRequestColorPickerOpen: (ColorPickKey) -> Unit,
-    onDismissColorPicker: () -> Unit,
-    onUpdateColor: (Color) -> Unit,
     onClickCancel: () -> Unit,
     onClickApply: () -> Unit,
 ) {
     var presetDropdownExpanded by remember { mutableStateOf(false) }
 
-    if (uiState.showColorPickerDialog) {
-        ColorPickerDialog(
-            initialColor = uiState.joinCommentForegroundColor,
-            onCloseRequest = onDismissColorPicker,
-            onConfirmColor = onUpdateColor,
-        )
-    }
     Column {
         LazyColumn(
             modifier = Modifier
@@ -157,34 +146,6 @@ fun SettingsView(
                     }
                 }
             }
-            item {
-                Text(text = "見た目", style = MaterialTheme.typography.h6)
-                Spacer(Modifier.height(16.dp))
-                MirrativCommentColorConfigRow(
-                    label = "入室コメント",
-                    foregroundColor = uiState.joinCommentForegroundColor,
-                    backgroundColor = uiState.joinCommentBackgroundColor,
-                    onPickForegroundColor = { onRequestColorPickerOpen(ColorPickKey.JOIN_COMMENT_FOREGROUND) },
-                    onPickBackgroundColor = { onRequestColorPickerOpen(ColorPickKey.JOIN_COMMENT_BACKGROUND) },
-                    onClickPreview = { TODO() },
-                )
-                MirrativCommentColorConfigRow(
-                    label = "ギフトコメント",
-                    foregroundColor = uiState.giftCommentForegroundColor,
-                    backgroundColor = uiState.giftCommentBackgroundColor,
-                    onPickForegroundColor = { onRequestColorPickerOpen(ColorPickKey.GIFT_COMMENT_FOREGROUND) },
-                    onPickBackgroundColor = { onRequestColorPickerOpen(ColorPickKey.GIFT_COMMENT_BACKGROUND) },
-                    onClickPreview = { TODO() },
-                )
-                MirrativCommentColorConfigRow(
-                    label = "ボットコメント",
-                    foregroundColor = uiState.botCommentForegroundColor,
-                    backgroundColor = uiState.botCommentBackgroundColor,
-                    onPickForegroundColor = { onRequestColorPickerOpen(ColorPickKey.BOT_COMMENT_FOREGROUND) },
-                    onPickBackgroundColor = { onRequestColorPickerOpen(ColorPickKey.BOT_COMMENT_BACKGROUND) },
-                    onClickPreview = { TODO() },
-                )
-            }
         }
         Row(
             modifier = Modifier
@@ -215,8 +176,5 @@ private fun SettingsViewPreview() {
         onClickCancel = {},
         onClickApply = {},
         onSpeakerUpdated = {},
-        onRequestColorPickerOpen = {},
-        onDismissColorPicker = {},
-        onUpdateColor = {},
     )
 }

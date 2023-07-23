@@ -23,8 +23,7 @@ fun CommentItemView(
     modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier
-            .padding(8.dp),
+        modifier = modifier.padding(8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Image(
@@ -35,12 +34,14 @@ fun CommentItemView(
                 .clip(CircleShape)
         )
         Spacer(modifier = Modifier.width(8.dp))
-        Text(text = buildAnnotatedString {
-            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                append(username)
-            }
-            append(" ")
-            append(comment)
-        })
+        Text(
+            text = buildAnnotatedString {
+                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                    append(username)
+                }
+                append(" ")
+                append(comment)
+            },
+        )
     }
 }
