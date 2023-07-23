@@ -46,6 +46,9 @@ kotlin {
                 implementation("io.github.bonigarcia:webdrivermanager:5.0.3")
 
                 implementation("io.coil-kt:coil-compose:2.4.0")
+
+                implementation("com.godaddy.android.colorpicker:compose-color-picker:0.7.0")
+                implementation("com.godaddy.android.colorpicker:compose-color-picker-jvm:0.7.0")
             }
         }
         val jvmTest by getting

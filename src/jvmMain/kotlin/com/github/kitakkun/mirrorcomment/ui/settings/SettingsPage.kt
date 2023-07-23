@@ -26,5 +26,8 @@ fun SettingsPage(
             navigator?.pop()
         },
         onSpeakerUpdated = viewModel::updateSpeaker,
+        onRequestColorPickerOpen = viewModel::showColorPickerDialog,
+        onDismissColorPicker = viewModel::closeColorPickerDialog,
+        onUpdateColor = viewModel::updateColorAndCloseDialog,
     )
 }

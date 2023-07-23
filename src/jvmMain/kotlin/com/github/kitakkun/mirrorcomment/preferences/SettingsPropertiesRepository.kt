@@ -42,4 +42,22 @@ class SettingsPropertiesRepository {
         properties.setProperty("speakerUUID", uuid)
         properties.store(propertiesFile.outputStream(), null)
     }
+
+    fun getCommentForegroundColor(key: String): String {
+        return properties.getProperty("${key}ForegroundColor", "#000000")
+    }
+
+    fun setCommentForegroundColor(key: String, color: String) {
+        properties.setProperty("${key}ForegroundColor", color)
+        properties.store(propertiesFile.outputStream(), null)
+    }
+
+    fun getCommentBackgroundColor(key: String): String {
+        return properties.getProperty("${key}BackgroundColor", "#FFFFFF")
+    }
+
+    fun setCommentBackgroundColor(key: String, color: String) {
+        properties.setProperty("${key}BackgroundColor", color)
+        properties.store(propertiesFile.outputStream(), null)
+    }
 }
