@@ -28,6 +28,7 @@ class CommentViewerViewModel(
 
     private var ktVoxApi: KtVoxApi
     private var speakerId: Int = 0
+    private var speakingEnabled: Boolean = true
 
     private val mutableReadUpCommentFlow = MutableSharedFlow<MirrativComment>()
 
@@ -44,6 +45,7 @@ class CommentViewerViewModel(
 
         launch {
             mutableReadUpCommentFlow.collect {
+                if (!speakingEnabled) return@collect
                 try {
                     val audioQuery = ktVoxApi.createAudioQuery(
                         text = "${it.username} ${it.comment}",
