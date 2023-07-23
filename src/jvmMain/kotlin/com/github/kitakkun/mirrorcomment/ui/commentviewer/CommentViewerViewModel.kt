@@ -39,6 +39,7 @@ class CommentViewerViewModel(
     fun startObserveComments() {
         cancel()
         val liveId = uiState.value.rawLiveUrl.split("/").last()
+        retrieveService?.dispose()
         retrieveService = get { parametersOf(liveId) }
         launch {
             retrieveService?.newCommentsFlow?.collect { newComments ->
