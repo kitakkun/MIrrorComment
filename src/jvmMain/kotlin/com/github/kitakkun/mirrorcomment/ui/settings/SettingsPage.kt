@@ -25,5 +25,6 @@ fun SettingsPage(
             viewModel.applySettings()
             navigator?.pop()
         },
+        onSpeakerUpdated = viewModel::updateSpeaker,
     )
 }

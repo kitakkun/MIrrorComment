@@ -33,8 +33,18 @@ class SettingsViewModel : KoinComponent, CoroutineScope by DefaultScope() {
             } catch (e: Exception) {
                 false
             }
+            val speakers = try {
+                val ktVoxApi = get<KtVoxApi> { parametersOf(url) }
+                ktVoxApi.getSpeakers().body() ?: emptyList()
+            } catch (e: Exception) {
+                emptyList()
+            }
             mutableUiState.update {
-                it.copy(checkingVoiceVoxServer = false, isVoiceVoxServerRunning = connectionAvailable)
+                it.copy(
+                    checkingVoiceVoxServer = false,
+                    isVoiceVoxServerRunning = connectionAvailable,
+                    speakers = speakers,
+                )
             }
         }
     }
@@ -44,6 +54,7 @@ class SettingsViewModel : KoinComponent, CoroutineScope by DefaultScope() {
             it.copy(
                 speakingEnabled = settingsPropertiesRepository.getSpeakingEnabled(),
                 voiceVoxServerUrl = settingsPropertiesRepository.getVoiceVoxServerUrl(),
+                speakerUUID = settingsPropertiesRepository.getSpeakerUUID(),
             )
         }
         checkVoiceVoxServerStatus(uiState.value.voiceVoxServerUrl)
@@ -63,6 +74,11 @@ class SettingsViewModel : KoinComponent, CoroutineScope by DefaultScope() {
     fun applySettings() {
         settingsPropertiesRepository.setSpeakingEnabled(uiState.value.speakingEnabled)
         settingsPropertiesRepository.setVoiceVoxServerUrl(uiState.value.voiceVoxServerUrl)
+        settingsPropertiesRepository.setSpeakerUUID(uiState.value.speakerUUID)
+    }
+
+    fun updateSpeaker(speakerUUID: String) {
+        mutableUiState.update { it.copy(speakerUUID = speakerUUID) }
     }
 }
 

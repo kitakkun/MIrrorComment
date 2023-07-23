@@ -33,4 +33,13 @@ class SettingsPropertiesRepository {
         properties.setProperty("speakingEnabled", enabled.toString())
         properties.store(propertiesFile.outputStream(), null)
     }
+
+    fun getSpeakerUUID(): String {
+        return properties.getProperty("speakerUUID", "")
+    }
+
+    fun setSpeakerUUID(uuid: String) {
+        properties.setProperty("speakerUUID", uuid)
+        properties.store(propertiesFile.outputStream(), null)
+    }
 }

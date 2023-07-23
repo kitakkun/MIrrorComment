@@ -1,6 +1,8 @@
 package com.github.kitakkun.mirrorcomment.ui.settings
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
@@ -8,10 +10,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -19,9 +22,11 @@ fun SettingsView(
     uiState: SettingsState,
     onChangeSpeakingEnabled: (Boolean) -> Unit,
     onChangeVoiceVoxServerUrl: (String) -> Unit,
+    onSpeakerUpdated: (String) -> Unit,
     onClickCancel: () -> Unit,
     onClickApply: () -> Unit,
 ) {
+    var presetDropdownExpanded by remember { mutableStateOf(false) }
     Column {
         LazyColumn(
             modifier = Modifier
@@ -97,6 +102,41 @@ fun SettingsView(
                         }
                     )
                 }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(text = "キャラクター")
+                    Spacer(Modifier.weight(1f))
+                    Box(
+                        contentAlignment = Alignment.TopCenter
+                    ) {
+                        Text(
+                            text = uiState.speakers.find { it.speakerUuid == uiState.speakerUUID }?.name ?: "Not Found",
+                            modifier = Modifier
+                                .border(
+                                    width = 1.dp,
+                                    color = MaterialTheme.colors.onSurface.copy(alpha = 0.12f),
+                                    shape = MaterialTheme.shapes.small,
+                                )
+                                .padding(4.dp)
+                                .clip(MaterialTheme.shapes.small)
+                                .clickable { presetDropdownExpanded = true },
+                        )
+                        DropdownMenu(
+                            expanded = presetDropdownExpanded,
+                            onDismissRequest = { presetDropdownExpanded = false },
+                        ) {
+                            uiState.speakers.forEach { speaker ->
+                                DropdownMenuItem(onClick = {
+                                    onSpeakerUpdated(speaker.speakerUuid)
+                                    presetDropdownExpanded = false
+                                }) {
+                                    Text(text = speaker.name)
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
         Row(
@@ -127,5 +167,6 @@ private fun SettingsViewPreview() {
         onChangeSpeakingEnabled = {},
         onClickCancel = {},
         onClickApply = {},
+        onSpeakerUpdated = {},
     )
 }
