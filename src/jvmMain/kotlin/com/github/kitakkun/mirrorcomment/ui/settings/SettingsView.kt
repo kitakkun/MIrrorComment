@@ -148,6 +148,10 @@ fun SettingsView(
                 }
             }
             item {
+                Text(
+                    text = "その他",
+                    style = MaterialTheme.typography.h6,
+                )
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
