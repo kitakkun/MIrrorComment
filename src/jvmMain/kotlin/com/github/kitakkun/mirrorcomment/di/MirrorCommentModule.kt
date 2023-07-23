@@ -14,11 +14,10 @@ val mirrorCommentModule = module {
         val options = ChromeOptions()
         options.addArguments("--headless")
         options.addArguments("--lang=ja-JP")
-        System.setProperty("webdriver.chrome.driver", "/opt/homebrew/bin/chromedriver")
         ChromeDriver(options)
     }
-    factory<MirrativCommentRetrieveService> { (liveId: String) ->
-        MirrativCommentRetrieveService(get(), liveId)
+    single<MirrativCommentRetrieveService> {
+        MirrativCommentRetrieveService(get())
     }
     factory<KtVoxApi> {(serverUrl: String) ->
         KtVoxApi.initialize(serverUrl)

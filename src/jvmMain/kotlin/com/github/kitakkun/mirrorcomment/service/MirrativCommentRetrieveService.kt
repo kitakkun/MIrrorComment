@@ -3,7 +3,6 @@ package com.github.kitakkun.mirrorcomment.service
 import com.github.kitakkun.mirrorcomment.coroutines.IOScope
 import com.github.kitakkun.mirrorcomment.model.MirrativComment
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -13,14 +12,13 @@ import org.openqa.selenium.chrome.ChromeDriver
 
 class MirrativCommentRetrieveService(
     private val driver: ChromeDriver,
-    private val liveId: String,
 ) : CoroutineScope by IOScope() {
     companion object {
         private const val BASE_URL = "https://www.mirrativ.com/live/"
         private const val RETRIEVE_INTERVAL_MILLIS = 1000L
     }
 
-    private val url: String get() = "$BASE_URL$liveId?lang=ja"
+    private fun getLiveUrl(liveId: String) = "$BASE_URL$liveId?lang=ja"
 
     private val mutableNewCommentsFlow = MutableSharedFlow<List<MirrativComment>>()
     val newCommentsFlow = mutableNewCommentsFlow.asSharedFlow()
@@ -28,7 +26,6 @@ class MirrativCommentRetrieveService(
     private var loadedCommentSize = 0
 
     init {
-        driver.get(url)
         launch {
             while (true) {
                 // ページ読み込み後新規で追加されたコメントを取得
@@ -48,12 +45,17 @@ class MirrativCommentRetrieveService(
         }
     }
 
-    fun dispose() {
-        cancel()
-        driver.quit()
+    fun startCollecting(liveId: String) {
+        driver.get(getLiveUrl(liveId))
+    }
+
+    fun stopCollecting() {
+        if (driver.windowHandles.size > 1) {
+            driver.close()
+        }
     }
 
     private fun isNeedToBeRefreshed(): Boolean {
-        return driver.findElements(By.cssSelector(".alertify")).isNotEmpty()
+        return driver.findElements(By.cssSelector(".alertify"))?.isNotEmpty() ?: false
     }
 }
