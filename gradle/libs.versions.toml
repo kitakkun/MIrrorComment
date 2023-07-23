@@ -9,15 +9,16 @@ webdrivermanager = "5.0.3"
 compose-color-picker = "0.7.0"
 
 [libraries]
-selenium = { module = "org.seleniumhq.selenium:selenium-java", version.ref = "selenium" }
-koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
-retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
-voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
-voyager-bottom-sheet-navigator = { module = "cafe.adriel.voyager:voyager-bottom-sheet-navigator", version.ref = "voyager" }
-voyager-tab-navigator = { module = "cafe.adriel.voyager:voyager-tab-navigator", version.ref = "voyager" }
-voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager" }
-ktvox = { module = "com.github.kitakkun:kt-vox", version.ref = "kxvox" }
-material-icons-extended = { module = "org.jetbrains.compose.material:material-icons-extended", version.ref = "compose" }
-webdrivermanager = { module = "io.github.bonigarcia:webdrivermanager", version.ref = "webdrivermanager" }
-compose-color-picker = { module = "com.godaddy.android.colorpicker:compose-color-picker", version.ref = "compose-color-picker" }
-compose-color-picker-jvm = { module = "com.godaddy.android.colorpicker:compose-color-picker-jvm", version.ref = "compose-color-picker" }
+selenium = { group = "org.seleniumhq.selenium", name = "selenium-java", version.ref = "selenium" }
+koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+voyager-navigator = { group = "cafe.adriel.voyager", name = "voyager-navigator", version.ref = "voyager" }
+voyager-bottom-sheet-navigator = { group = "cafe.adriel.voyager", name = "voyager-bottom-sheet-navigator", version.ref = "voyager" }
+voyager-tab-navigator = { group = "cafe.adriel.voyager", name = "voyager-tab-navigator", version.ref = "voyager" }
+voyager-transitions = { group = "cafe.adriel.voyager", name = "voyager-transitions", version.ref = "voyager" }
+ktvox = { group = "com.github.kitakkun", name = "kt-vox", version.ref = "kxvox" }
+material-icons-extended = { group = "org.jetbrains.compose.material", name = "material-icons-extended", version.ref = "compose" }
+webdrivermanager = { group = "io.github.bonigarcia", name = "webdrivermanager", version.ref = "webdrivermanager" }
+compose-color-picker = { group = "com.godaddy.android.colorpicker", name = "compose-color-picker", version.ref = "compose-color-picker" }
+compose-color-picker-jvm = { group = "com.godaddy.android.colorpicker", name = "compose-color-picker-jvm", version.ref = "compose-color-picker" }
+
