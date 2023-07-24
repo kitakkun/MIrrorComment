@@ -63,6 +63,7 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "MirrorComment"
             packageVersion = "1.0.0"
+            // ref: https://stackoverflow.com/questions/61727613/unexpected-behaviour-from-gson/74914488#74914488
             modules("jdk.unsupported")
         }
         buildTypes.release {
