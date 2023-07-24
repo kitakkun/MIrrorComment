@@ -51,6 +51,11 @@ kotlin {
     }
 }
 
+dependencies {
+    commonTestImplementation(kotlin("test"))
+    commonTestImplementation(libs.koin.test)
+}
+
 compose.desktop {
     application {
         mainClass = "com.github.kitakkun.mirrorcomment.MainKt"
