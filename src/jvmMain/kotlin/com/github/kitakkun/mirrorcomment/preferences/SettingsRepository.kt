@@ -1,26 +1,15 @@
 package com.github.kitakkun.mirrorcomment.preferences
 
-import java.io.File
-import java.io.FileReader
-import java.util.*
+import com.russhwolf.settings.Settings
+import com.russhwolf.settings.get
+import com.russhwolf.settings.set
 
-class SettingsRepository(
-    propertiesFilename: String = "settings.properties",
-) {
-    private val properties = Properties()
-    private val propertiesFile = File(propertiesFilename)
-
-    init {
-        if (propertiesFile.exists()) {
-            FileReader(propertiesFile).use {
-                properties.load(it)
-            }
-        }
-    }
+class SettingsRepository {
+    private val settings: Settings = Settings()
 
     fun getVoiceVoxServerUrl(): String? {
         return try {
-            val rawUrl = properties.getProperty("voiceVoxServerUrl", null)
+            val rawUrl = settings["voiceVoxServerUrl", ""]
             if (rawUrl.isValidHttpOrHttpsUrl()) {
                 rawUrl
             } else {
@@ -33,25 +22,22 @@ class SettingsRepository(
 
     fun setVoiceVoxServerUrl(url: String) {
         if (!url.isValidHttpOrHttpsUrl()) return
-        properties.setProperty("voiceVoxServerUrl", url)
-        properties.store(propertiesFile.outputStream(), null)
+        settings["voiceVoxServerUrl"] = url
     }
 
     fun getSpeakingEnabled(): Boolean {
-        return properties.getProperty("speakingEnabled", "false").toBoolean()
+        return settings["speakingEnabled", false]
     }
 
     fun setSpeakingEnabled(enabled: Boolean) {
-        properties.setProperty("speakingEnabled", enabled.toString())
-        properties.store(propertiesFile.outputStream(), null)
+        settings["speakingEnabled"] = enabled
     }
 
     fun getSpeakerUUID(): String {
-        return properties.getProperty("speakerUUID", "")
+        return settings["speakerUUID", ""]
     }
 
     fun setSpeakerUUID(uuid: String) {
-        properties.setProperty("speakerUUID", uuid)
-        properties.store(propertiesFile.outputStream(), null)
+        settings["speakerUUID"] = uuid
     }
 }

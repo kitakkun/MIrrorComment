@@ -21,6 +21,7 @@ kotlin {
         jvmToolchain(11)
         withJava()
     }
+
     sourceSets {
         val jvmMain by getting {
             dependencies {
@@ -45,6 +46,7 @@ kotlin {
                 implementation(libs.compose.color.picker.jvm)
                 implementation(libs.about.libraries.core)
                 implementation(libs.about.libraries.compose)
+                implementation(libs.multiplatform.settings)
             }
         }
         val jvmTest by getting
