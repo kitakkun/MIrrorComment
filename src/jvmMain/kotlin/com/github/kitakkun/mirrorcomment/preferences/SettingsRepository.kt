@@ -5,7 +5,7 @@ import java.io.FileReader
 import java.net.URL
 import java.util.*
 
-class SettingsPropertiesRepository(
+class SettingsRepository(
     propertiesFilename: String = "settings.properties"
 ) {
     private val properties = Properties()

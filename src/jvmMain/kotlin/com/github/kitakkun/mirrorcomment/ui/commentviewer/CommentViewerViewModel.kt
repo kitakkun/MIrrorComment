@@ -4,7 +4,7 @@ import com.github.kitakkun.ktvox.api.KtVoxApi
 import com.github.kitakkun.mirrorcomment.AudioPlayer
 import com.github.kitakkun.mirrorcomment.coroutines.DefaultScope
 import com.github.kitakkun.mirrorcomment.model.MirrativComment
-import com.github.kitakkun.mirrorcomment.preferences.SettingsPropertiesRepository
+import com.github.kitakkun.mirrorcomment.preferences.SettingsRepository
 import com.github.kitakkun.mirrorcomment.service.MirrativCommentRetrieveService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.*
@@ -24,7 +24,7 @@ class CommentViewerViewModel(
     val voiceVoxErrorFlow = mutableVoiceVoxErrorFlow.asSharedFlow()
 
     private val retrieveService: MirrativCommentRetrieveService by inject()
-    private val settingsPropertiesRepository: SettingsPropertiesRepository by inject()
+    private val settingsRepository: SettingsRepository by inject()
 
     private var ktVoxApi: KtVoxApi? = null
     private var speakerId: Int = 0
@@ -33,7 +33,7 @@ class CommentViewerViewModel(
     private val mutableReadUpCommentFlow = MutableSharedFlow<MirrativComment>()
 
     init {
-        val url = settingsPropertiesRepository.getVoiceVoxServerUrl()
+        val url = settingsRepository.getVoiceVoxServerUrl()
         if (url != null) {
             ktVoxApi = get { parametersOf(url) }
         }
@@ -78,15 +78,15 @@ class CommentViewerViewModel(
     }
 
     fun applySettingsChanges() {
-        speakingEnabled = settingsPropertiesRepository.getSpeakingEnabled()
-        val url = settingsPropertiesRepository.getVoiceVoxServerUrl()
+        speakingEnabled = settingsRepository.getSpeakingEnabled()
+        val url = settingsRepository.getVoiceVoxServerUrl()
         if (url != null) {
             ktVoxApi = get { parametersOf(url) }
         }
         launch {
             val speakers = ktVoxApi?.getSpeakers()?.body() ?: return@launch
             speakerId = speakers.indexOfFirst { speaker ->
-                speaker.speakerUuid == settingsPropertiesRepository.getSpeakerUUID()
+                speaker.speakerUuid == settingsRepository.getSpeakerUUID()
             }.coerceAtLeast(0)
         }
     }

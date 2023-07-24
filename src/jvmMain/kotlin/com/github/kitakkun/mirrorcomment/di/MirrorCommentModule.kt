@@ -2,7 +2,7 @@ package com.github.kitakkun.mirrorcomment.di
 
 import com.github.kitakkun.ktvox.api.KtVoxApi
 import com.github.kitakkun.mirrorcomment.AudioPlayer
-import com.github.kitakkun.mirrorcomment.preferences.SettingsPropertiesRepository
+import com.github.kitakkun.mirrorcomment.preferences.SettingsRepository
 import com.github.kitakkun.mirrorcomment.service.MirrativCommentRetrieveService
 import com.github.kitakkun.mirrorcomment.ui.commentviewer.CommentViewerViewModel
 import org.koin.dsl.module
@@ -22,7 +22,7 @@ val mirrorCommentModule = module {
     factory<KtVoxApi> {(serverUrl: String) ->
         KtVoxApi.initialize(serverUrl)
     }
-    single<SettingsPropertiesRepository> { SettingsPropertiesRepository() }
+    single<SettingsRepository> { SettingsRepository() }
     single { AudioPlayer() }
     single { CommentViewerViewModel(get()) }
 }

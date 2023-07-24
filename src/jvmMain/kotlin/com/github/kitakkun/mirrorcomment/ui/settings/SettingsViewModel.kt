@@ -2,7 +2,7 @@ package com.github.kitakkun.mirrorcomment.ui.settings
 
 import com.github.kitakkun.ktvox.api.KtVoxApi
 import com.github.kitakkun.mirrorcomment.coroutines.DefaultScope
-import com.github.kitakkun.mirrorcomment.preferences.SettingsPropertiesRepository
+import com.github.kitakkun.mirrorcomment.preferences.SettingsRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
@@ -15,7 +15,7 @@ import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
 
 class SettingsViewModel : KoinComponent, CoroutineScope by DefaultScope() {
-    private val settingsPropertiesRepository: SettingsPropertiesRepository by inject()
+    private val settingsRepository: SettingsRepository by inject()
 
     private val mutableUiState = MutableStateFlow(SettingsState())
     val uiState = mutableUiState.asStateFlow()
@@ -52,9 +52,9 @@ class SettingsViewModel : KoinComponent, CoroutineScope by DefaultScope() {
     fun fetchSettings() {
         mutableUiState.update {
             it.copy(
-                speakingEnabled = settingsPropertiesRepository.getSpeakingEnabled(),
-                voiceVoxServerUrl = settingsPropertiesRepository.getVoiceVoxServerUrl() ?: "",
-                speakerUUID = settingsPropertiesRepository.getSpeakerUUID(),
+                speakingEnabled = settingsRepository.getSpeakingEnabled(),
+                voiceVoxServerUrl = settingsRepository.getVoiceVoxServerUrl() ?: "",
+                speakerUUID = settingsRepository.getSpeakerUUID(),
             )
         }
         checkVoiceVoxServerStatus(uiState.value.voiceVoxServerUrl)
@@ -72,9 +72,9 @@ class SettingsViewModel : KoinComponent, CoroutineScope by DefaultScope() {
     }
 
     fun applySettings() {
-        settingsPropertiesRepository.setSpeakingEnabled(uiState.value.speakingEnabled)
-        settingsPropertiesRepository.setVoiceVoxServerUrl(uiState.value.voiceVoxServerUrl)
-        settingsPropertiesRepository.setSpeakerUUID(uiState.value.speakerUUID)
+        settingsRepository.setSpeakingEnabled(uiState.value.speakingEnabled)
+        settingsRepository.setVoiceVoxServerUrl(uiState.value.voiceVoxServerUrl)
+        settingsRepository.setSpeakerUUID(uiState.value.speakerUUID)
     }
 
     fun updateSpeaker(speakerUUID: String) {
