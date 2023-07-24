@@ -89,7 +89,6 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./MirrorComment-ubuntu.deb
-          asset_name: ${{ basename ./MirrorComment-ubuntu.deb }}
           asset_content_type: application/octet-stream
 
       - name: Upload windows artifact to release
@@ -99,7 +98,6 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./MirrorComment-windows.msi
-          asset_name: ${{ basename ./MirrorComment-windows.msi }}
           asset_content_type: application/octet-stream
 
       - name: Upload macos artifact to release
@@ -109,5 +107,4 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./MirrorComment-macos.dmg
-          asset_name: ${{ basename ./MirrorComment-macos.dmg }}
           asset_content_type: application/octet-stream
