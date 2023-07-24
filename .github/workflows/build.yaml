@@ -63,7 +63,7 @@ jobs:
       - name: Set version
         id: set_version
         run: |
-          version=$(cat version/version.txt)
+          version=$(cat version.txt)
           echo "VERSION=$version" >> $GITHUB_ENV
 
       - name: Update aboutlibraries.json
@@ -91,7 +91,7 @@ jobs:
 #      - name: Set version
 #        id: set_version
 #        run: |
-#          version=$(cat version/version.txt)
+#          version=$(cat version.txt)
 #          echo "VERSION=$version" >> $GITHUB_ENV
 #
 #      - name: Create Release
