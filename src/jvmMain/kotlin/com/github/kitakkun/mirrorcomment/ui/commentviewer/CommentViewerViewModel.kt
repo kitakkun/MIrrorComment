@@ -13,6 +13,8 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
+import java.util.*
+import kotlin.jvm.optionals.getOrNull
 
 class CommentViewerViewModel(
     private val player: AudioPlayer,
@@ -26,7 +28,7 @@ class CommentViewerViewModel(
     private val retrieveService: MirrativCommentRetrieveService by inject()
     private val settingsRepository: SettingsRepository by inject()
 
-    private var ktVoxApi: KtVoxApi? = null
+    private var ktVoxApi: Optional<KtVoxApi> = Optional.empty()
     private var speakerId: Int = 0
     private var speakingEnabled: Boolean = true
 
@@ -34,9 +36,7 @@ class CommentViewerViewModel(
 
     init {
         val url = settingsRepository.getVoiceVoxServerUrl()
-        if (url != null) {
-            ktVoxApi = get { parametersOf(url) }
-        }
+        ktVoxApi = get { parametersOf(url) }
 
         launch {
             retrieveService.newCommentsFlow.collect { newComments ->
@@ -48,15 +48,16 @@ class CommentViewerViewModel(
         launch {
             mutableReadUpCommentFlow.collect {
                 if (!speakingEnabled) return@collect
+                val api = ktVoxApi.getOrNull() ?: return@collect
                 try {
-                    val audioQuery = ktVoxApi?.createAudioQuery(
+                    val audioQuery = api.createAudioQuery(
                         text = "${it.username} ${it.comment}",
                         speaker = speakerId,
-                    )?.body() ?: return@collect
-                    val wave = ktVoxApi?.postSynthesis(
+                    ).body() ?: return@collect
+                    val wave = api.postSynthesis(
                         speaker = speakerId,
                         audioQuery = audioQuery,
-                    )?.body() ?: return@collect
+                    ).body() ?: return@collect
                     player.play(wave.bytes())
                 } catch (e: Throwable) {
                     mutableVoiceVoxErrorFlow.emit(Unit)
@@ -80,11 +81,9 @@ class CommentViewerViewModel(
     fun applySettingsChanges() {
         speakingEnabled = settingsRepository.getSpeakingEnabled()
         val url = settingsRepository.getVoiceVoxServerUrl()
-        if (url != null) {
-            ktVoxApi = get { parametersOf(url) }
-        }
+        ktVoxApi = get { parametersOf(url) }
         launch {
-            val speakers = ktVoxApi?.getSpeakers()?.body() ?: return@launch
+            val speakers = ktVoxApi.getOrNull()?.getSpeakers()?.body() ?: return@launch
             speakerId = speakers.indexOfFirst { speaker ->
                 speaker.speakerUuid == settingsRepository.getSpeakerUUID()
             }.coerceAtLeast(0)

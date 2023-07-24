@@ -13,6 +13,8 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
+import java.util.*
+import kotlin.jvm.optionals.getOrNull
 
 class SettingsViewModel : KoinComponent, CoroutineScope by DefaultScope() {
     private val settingsRepository: SettingsRepository by inject()
@@ -26,15 +28,23 @@ class SettingsViewModel : KoinComponent, CoroutineScope by DefaultScope() {
         voiceVoxServerCheckJob?.cancel()
         voiceVoxServerCheckJob = async {
             mutableUiState.update { it.copy(checkingVoiceVoxServer = true) }
+            val ktVoxApi = get<Optional<KtVoxApi>> { parametersOf(url) }.getOrNull()
+            if (ktVoxApi == null) {
+                mutableUiState.update {
+                    it.copy(
+                        checkingVoiceVoxServer = false,
+                        isVoiceVoxServerRunning = false,
+                        speakers = emptyList(),
+                    )
+                }
+                return@async
+            }
             val connectionAvailable = try {
-                val ktVoxApi = get<KtVoxApi> { parametersOf(url) }
-                ktVoxApi.getVersion()
-                true
+                ktVoxApi.getVersion().isSuccessful
             } catch (e: Exception) {
                 false
             }
             val speakers = try {
-                val ktVoxApi = get<KtVoxApi> { parametersOf(url) }
                 ktVoxApi.getSpeakers().body() ?: emptyList()
             } catch (e: Exception) {
                 emptyList()

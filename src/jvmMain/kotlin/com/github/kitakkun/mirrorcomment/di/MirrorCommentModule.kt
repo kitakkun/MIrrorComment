@@ -8,6 +8,7 @@ import com.github.kitakkun.mirrorcomment.ui.commentviewer.CommentViewerViewModel
 import org.koin.dsl.module
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
+import java.util.*
 
 val mirrorCommentModule = module {
     factory<ChromeDriver> {
@@ -19,8 +20,12 @@ val mirrorCommentModule = module {
     single<MirrativCommentRetrieveService> {
         MirrativCommentRetrieveService(get())
     }
-    factory<KtVoxApi> {(serverUrl: String) ->
-        KtVoxApi.initialize(serverUrl)
+    factory<Optional<KtVoxApi>> { (serverUrl: String) ->
+        try {
+            Optional.of(KtVoxApi.initialize(serverUrl))
+        } catch (e: Throwable) {
+            Optional.empty<KtVoxApi>()
+        }
     }
     single<SettingsRepository> { SettingsRepository() }
     single { AudioPlayer() }
