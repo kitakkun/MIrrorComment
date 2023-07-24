@@ -3,7 +3,6 @@ package com.github.kitakkun.mirrorcomment
 import com.github.kitakkun.mirrorcomment.coroutines.IOScope
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableSharedFlow
-import java.io.File
 import javax.sound.sampled.AudioSystem
 
 class AudioPlayer : CoroutineScope by IOScope() {
@@ -27,11 +26,9 @@ class AudioPlayer : CoroutineScope by IOScope() {
     private fun startCollectAndPlay() {
         launch {
             waveByteArrayFlow.collect {
-                val waveFile = File("temp.wav")
-                waveFile.writeBytes(it)
-                val job = async {
+                async {
                     try {
-                        val audioInputStream = AudioSystem.getAudioInputStream(waveFile)
+                        val audioInputStream = AudioSystem.getAudioInputStream(it.inputStream())
                         val clip = AudioSystem.getClip()
                         clip.open(audioInputStream)
                         clip.start()
@@ -41,8 +38,7 @@ class AudioPlayer : CoroutineScope by IOScope() {
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
-                }
-                job.await()
+                }.await()
             }
         }
     }
