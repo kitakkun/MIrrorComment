@@ -1,8 +1,8 @@
 <component name="ArtifactManager">
-  <artifact type="jar" name="MIrrorComment-jvm-1.0-SNAPSHOT">
+  <artifact type="jar" name="MirrorComment-jvm-1.0-SNAPSHOT">
     <output-path>$PROJECT_DIR$/build/libs</output-path>
-    <root id="archive" name="MIrrorComment-jvm-1.0-SNAPSHOT.jar">
-      <element id="module-output" name="MIrrorComment.jvmMain" />
+    <root id="archive" name="MirrorComment-jvm-1.0-SNAPSHOT.jar">
+      <element id="module-output" name="MirrorComment.jvmMain" />
     </root>
   </artifact>
 </component>
