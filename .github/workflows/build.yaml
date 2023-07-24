@@ -1,9 +1,13 @@
 name: Build and Draft Release
 
 on:
-  push:
-    branches:
-      - release/1.0.0
+  workflow_dispatch:
+    branches: [ main ]
+    inputs:
+      logLevel:
+        description: 'Log level'
+        required: false
+        default: 'warning'
 
 jobs:
   build:
