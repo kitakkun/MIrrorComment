@@ -34,11 +34,6 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
 
-      - name: Download version
-        uses: actions/download-artifact@v2
-        with:
-          name: version
-
       - name: Build with Gradle
         shell: bash
         run: ./gradlew ${{ matrix.gradle_task }}
