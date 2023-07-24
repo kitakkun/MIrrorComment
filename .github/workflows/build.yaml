@@ -1,4 +1,4 @@
-name: Build Test
+name: Build and Draft Release
 
 on:
   push:
@@ -33,17 +33,14 @@ jobs:
           - os: ubuntu-latest
             gradle_task: packageReleaseDeb
             artifact_name: MirrorComment-ubuntu
-            asset_content_type: application/x-deb
             extensions: deb
           - os: windows-latest
             gradle_task: packageReleaseMsi
             artifact_name: MirrorComment-windows
-            asset_content_type: application/x-msi
             extensions: msi
           - os: macos-latest
             gradle_task: packageReleaseDmg
             artifact_name: MirrorComment-macos
-            asset_content_type: application/octet-stream
             extensions: dmg
     steps:
       - name: Checkout
@@ -82,46 +79,53 @@ jobs:
           name: ${{ matrix.artifact_name }}
           path: ./build/compose/binaries/main-release/**/*.${{ matrix.extensions }}
 
-#  create_release:
-#    needs: build
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Download version
-#        uses: actions/download-artifact@v2
-#        with:
-#          name: version
-#
-#      - name: Set version
-#        id: set_version
-#        shell: bash
-#        run: |
-#          version=$(cat version.txt)
-#          echo "VERSION=$version" >> $GITHUB_ENV
-#
-#      - name: Create Release
-#        id: create_release
-#        uses: actions/create-release@v1
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        with:
-#          tag_name: v${{ env.VERSION }}
-#          release_name: Release v${{ env.VERSION }}
-#          draft: false
-#          prerelease: false
-#
-#      - name: Download artifacts and upload to release
-#        shell: bash
-#        run: |
-#          for os in ubuntu windows macos
-#          do
-#            artifact_name="application-$os"
-#            wget -q "https://github.com/${{ github.repository }}/actions/artifacts/$artifact_name/zip"
-#            unzip $artifact_name.zip
-#            asset_path=$(find . -name "*.$os")
-#            curl \
-#              --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-#              --header "Content-Type: application/octet-stream" \
-#              --data-binary "@$asset_path" \
-#              --request POST \
-#              "${{ steps.create_release.outputs.upload_url }}?name=$(basename $asset_path)"
-#          done
+  create_release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download version
+        uses: actions/download-artifact@v2
+        with:
+          name: version
+
+      - name: Set version
+        id: set_version
+        shell: bash
+        run: |
+          version=$(cat version.txt)
+          echo "VERSION=$version" >> $GITHUB_ENV
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ env.VERSION }}
+          release_name: Release v${{ env.VERSION }}
+          draft: true
+          prerelease: false
+
+      - name: Download artifacts and upload to release
+        shell: bash
+        run: |
+          for os in ubuntu windows macos
+          do
+            artifact_name="MirrorComment-$os"
+            wget -q "https://github.com/${{ github.repository }}/actions/artifacts/$artifact_name/zip"
+            unzip $artifact_name.zip
+            if [ "$os" == "ubuntu" ]; then
+              ext="deb"
+            elif [ "$os" == "windows" ]; then
+              ext="msi"
+            elif [ "$os" == "macos" ]; then
+              ext="dmg"
+            fi
+            asset_path=$(find . -name "*.$ext")
+            curl \
+              --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              --header "Content-Type: application/octet-stream" \
+              --data-binary "@$asset_path" \
+              --request POST \
+              "${{ steps.create_release.outputs.upload_url }}?name=$(basename $asset_path)"
+          done
