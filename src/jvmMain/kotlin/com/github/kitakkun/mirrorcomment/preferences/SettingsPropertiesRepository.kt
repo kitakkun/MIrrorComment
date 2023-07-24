@@ -2,6 +2,7 @@ package com.github.kitakkun.mirrorcomment.preferences
 
 import java.io.File
 import java.io.FileReader
+import java.net.URL
 import java.util.*
 
 class SettingsPropertiesRepository(
@@ -18,8 +19,14 @@ class SettingsPropertiesRepository(
         }
     }
 
-    fun getVoiceVoxServerUrl(): String {
-        return properties.getProperty("voiceVoxServerUrl", "")
+    fun getVoiceVoxServerUrl(): String? {
+        return try {
+            val rawUrl = properties.getProperty("voiceVoxServerUrl", null)
+            URL(rawUrl)
+            rawUrl
+        } catch (e: Exception) {
+            null
+        }
     }
 
     fun setVoiceVoxServerUrl(url: String) {

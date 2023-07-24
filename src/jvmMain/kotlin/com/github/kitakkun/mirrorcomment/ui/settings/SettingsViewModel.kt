@@ -53,7 +53,7 @@ class SettingsViewModel : KoinComponent, CoroutineScope by DefaultScope() {
         mutableUiState.update {
             it.copy(
                 speakingEnabled = settingsPropertiesRepository.getSpeakingEnabled(),
-                voiceVoxServerUrl = settingsPropertiesRepository.getVoiceVoxServerUrl(),
+                voiceVoxServerUrl = settingsPropertiesRepository.getVoiceVoxServerUrl() ?: "",
                 speakerUUID = settingsPropertiesRepository.getSpeakerUUID(),
             )
         }
