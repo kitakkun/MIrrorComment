@@ -1,0 +1,120 @@
+name: Build and Draft Release
+
+on:
+  workflow_dispatch:
+    branches: [ main ]
+    inputs:
+      logLevel:
+        description: 'Log level'
+        required: false
+        default: 'warning'
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        include:
+          - os: ubuntu-latest
+            gradle_task: packageReleaseDeb
+            artifact_name: MirrorComment-ubuntu
+            extensions: deb
+          - os: windows-latest
+            gradle_task: packageReleaseMsi
+            artifact_name: MirrorComment-windows
+            extensions: msi
+          - os: macos-latest
+            gradle_task: packageReleaseDmg
+            artifact_name: MirrorComment-macos
+            extensions: dmg
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+
+      - name: Build with Gradle
+        shell: bash
+        run: ./gradlew ${{ matrix.gradle_task }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.artifact_name }}
+          path: ./build/compose/binaries/main-release/**/*.${{ matrix.extensions }}
+
+  create_draft_release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          path: ./artifacts
+
+      - name: Resolve Artifacts Path and Name
+        run: |
+          deb_path=$(find ./artifacts/MirrorComment-ubuntu -name "*.deb")
+          msi_path=$(find ./artifacts/MirrorComment-windows -name "*.msi")
+          dmg_path=$(find ./artifacts/MirrorComment-macos -name "*.dmg")
+          deb_name=$(basename $deb_path)
+          msi_name=$(basename $msi_path)
+          dmg_name=$(basename $dmg_path)
+          echo "DEB_PATH=$deb_path" >> $GITHUB_ENV
+          echo "MSI_PATH=$msi_path" >> $GITHUB_ENV
+          echo "DMG_PATH=$dmg_path" >> $GITHUB_ENV
+          echo "DEB_NAME=$deb_name" >> $GITHUB_ENV
+          echo "MSI_NAME=$msi_name" >> $GITHUB_ENV
+          echo "DMG_NAME=$dmg_name" >> $GITHUB_ENV
+
+      - name: Resolve Version
+        run: |
+          version=$(grep 'packageVersion = ' build.gradle.kts | sed -n -e 's/^.*packageVersion = //p' | tr -d '"')
+          echo "VERSION=$version" >> $GITHUB_ENV
+
+      - name: Create Draft Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ env.VERSION }}
+        with:
+          tag_name: v${{ env.VERSION }}
+          release_name: Release v${{ env.VERSION }}
+          draft: true
+          prerelease: false
+
+      - name: Upload ubuntu artifact to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ env.DEB_PATH }}
+          asset_name: ${{ env.DEB_NAME }}
+          asset_content_type: application/octet-stream
+
+      - name: Upload windows artifact to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ env.MSI_PATH }}
+          asset_name: ${{ env.MSI_NAME }}
+          asset_content_type: application/octet-stream
+
+      - name: Upload macos artifact to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ env.DMG_PATH }}
+          asset_name: ${{ env.DMG_NAME }}
+          asset_content_type: application/octet-stream
