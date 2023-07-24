@@ -5,7 +5,7 @@ retrofit = "2.9.0"
 voyager = "1.0.0-rc06"
 kxvox = "0.0.3"
 compose = "1.4.1"
-webdrivermanager = "5.0.3"
+webdrivermanager = "5.4.1"
 compose-color-picker = "0.7.0"
 about-libraries = "10.8.3"
 

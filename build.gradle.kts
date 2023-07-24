@@ -63,6 +63,12 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "MirrorComment"
             packageVersion = "1.0.0"
+            modules("jdk.unsupported")
+        }
+        buildTypes.release {
+            proguard {
+                configurationFiles.from("proguard-rules.pro")
+            }
         }
     }
 }
