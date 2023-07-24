@@ -44,10 +44,28 @@ jobs:
           name: ${{ matrix.artifact_name }}
           path: ./build/compose/binaries/main-release/**/*.${{ matrix.extensions }}
 
-  create_release:
+  create_draft_release:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: Download ubuntu artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: MirrorComment-ubuntu
+          path: .
+
+      - name: Download windows artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: MirrorComment-windows
+          path: .
+
+      - name: Download macos artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: MirrorComment-macos
+          path: .
+
       - name: Extract version
         run: |
           version=$(grep 'packageVersion = ' build.gradle.kts | sed -n -e 's/^.*packageVersion = //p' | tr -d '"')
@@ -64,25 +82,32 @@ jobs:
           draft: true
           prerelease: false
 
-      - name: Download artifacts and upload to release
-        run: |
-          for os in ubuntu windows macos
-          do
-            artifact_name="MirrorComment-$os"
-            wget -q "https://github.com/${{ github.repository }}/actions/artifacts/$artifact_name/zip"
-            unzip $artifact_name.zip
-            if [ "$os" == "ubuntu" ]; then
-              ext="deb"
-            elif [ "$os" == "windows" ]; then
-              ext="msi"
-            elif [ "$os" == "macos" ]; then
-              ext="dmg"
-            fi
-            asset_path=$(find . -name "*.$ext")
-            curl \
-              --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-              --header "Content-Type: application/octet-stream" \
-              --data-binary "@$asset_path" \
-              --request POST \
-              "${{ steps.create_release.outputs.upload_url }}?name=$(basename $asset_path)"
-          done
+      - name: Upload ubuntu artifact to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./MirrorComment-ubuntu.deb
+          asset_name: ${{ basename ./MirrorComment-ubuntu.deb }}
+          asset_content_type: application/octet-stream
+
+      - name: Upload windows artifact to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./MirrorComment-windows.msi
+          asset_name: ${{ basename ./MirrorComment-windows.msi }}
+          asset_content_type: application/octet-stream
+
+      - name: Upload macos artifact to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./MirrorComment-macos.dmg
+          asset_name: ${{ basename ./MirrorComment-macos.dmg }}
+          asset_content_type: application/octet-stream
