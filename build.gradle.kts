@@ -67,6 +67,15 @@ compose.desktop {
             packageVersion = "1.0.0"
             // ref: https://stackoverflow.com/questions/61727613/unexpected-behaviour-from-gson/74914488#74914488
             modules("jdk.unsupported")
+            macOS {
+                iconFile.set(project.file("icon.icns"))
+            }
+            linux {
+                iconFile.set(project.file("icon.png"))
+            }
+            windows {
+                iconFile.set(project.file("icon.ico"))
+            }
         }
         buildTypes.release {
             proguard {
