@@ -17,8 +17,8 @@ fun CommentViewerPage(
     LaunchedEffect(Unit) {
         viewModel.applySettingsChanges()
         launch {
-            viewModel.voiceVoxErrorFlow.collect {
-                snackbarHostState.showSnackbar("VOICEVOXサーバーでエラーが発生しました")
+            viewModel.snackBarErrorFlow.collect { message ->
+                snackbarHostState.showSnackbar(message)
             }
         }
     }

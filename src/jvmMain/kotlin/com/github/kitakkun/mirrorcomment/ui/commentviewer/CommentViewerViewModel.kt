@@ -22,8 +22,8 @@ class CommentViewerViewModel(
     private val mutableUiState = MutableStateFlow(CommentViewerState(rawLiveUrl = ""))
     val uiState = mutableUiState.asStateFlow()
 
-    private val mutableVoiceVoxErrorFlow = MutableSharedFlow<Unit>()
-    val voiceVoxErrorFlow = mutableVoiceVoxErrorFlow.asSharedFlow()
+    private val mutableSnackbarErrorFlow = MutableSharedFlow<String>()
+    val snackBarErrorFlow = mutableSnackbarErrorFlow.asSharedFlow()
 
     private val retrieveService: MirrativCommentRetrieveService by inject()
     private val settingsRepository: SettingsRepository by inject()
@@ -60,7 +60,7 @@ class CommentViewerViewModel(
                     ).body() ?: return@collect
                     player.play(wave.bytes())
                 } catch (e: Throwable) {
-                    mutableVoiceVoxErrorFlow.emit(Unit)
+                    mutableSnackbarErrorFlow.emit("VOICEVOX: 音声合成に失敗しました")
                 }
             }
         }
@@ -73,7 +73,14 @@ class CommentViewerViewModel(
     }
 
     fun startObserveComments() {
-        val liveId = uiState.value.rawLiveUrl.split("/").last()
+        val rawLiveUrl = uiState.value.rawLiveUrl
+        val liveId = rawLiveUrl.split("/").last()
+        if (!rawLiveUrl.startsWith("https://www.mirrativ.com/live/") || liveId.isEmpty()) {
+            launch {
+                mutableSnackbarErrorFlow.emit("配信URLが無効です！")
+            }
+            return
+        }
         retrieveService.stopCollecting()
         retrieveService.startCollecting(liveId)
     }
