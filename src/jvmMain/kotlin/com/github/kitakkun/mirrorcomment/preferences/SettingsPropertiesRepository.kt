@@ -4,9 +4,11 @@ import java.io.File
 import java.io.FileReader
 import java.util.*
 
-class SettingsPropertiesRepository {
+class SettingsPropertiesRepository(
+    propertiesFilename: String = "settings.properties"
+) {
     private val properties = Properties()
-    private val propertiesFile = File("settings.properties")
+    private val propertiesFile = File(propertiesFilename)
 
     init {
         if (propertiesFile.exists()) {
