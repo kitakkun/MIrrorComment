@@ -64,7 +64,7 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "MirrorComment"
-            packageVersion = "1.0.0"
+            packageVersion = "0.0.1"
             // ref: https://stackoverflow.com/questions/61727613/unexpected-behaviour-from-gson/74914488#74914488
             modules("jdk.unsupported")
         }
