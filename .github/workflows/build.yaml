@@ -80,7 +80,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: ${{ matrix.artifact_name }}
-          path: ./build/compose/binaries/main-release/${{ matrix.extensions }}/MirrorComment-${{ env.VERSION }}.${{ matrix.extensions }}
+          path: ./build/compose/binaries/main-release/**/*.${{ matrix.extensions }}
 
 #  create_release:
 #    needs: build
