@@ -10,7 +10,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
         include:
           - os: ubuntu-latest
             gradle_task: packageReleaseDeb
@@ -48,30 +48,32 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Download ubuntu artifact
+      - name: Download Artifacts
         uses: actions/download-artifact@v2
         with:
-          name: MirrorComment-ubuntu
-          path: .
+          path: ./artifacts
 
-      - name: Download windows artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: MirrorComment-windows
-          path: .
+      - name: Resolve Artifacts Path and Name
+        run: |
+          deb_path=$(find ./artifacts/MirrorComment-ubuntu -name "*.deb")
+          msi_path=$(find ./artifacts/MirrorComment-windows -name "*.msi")
+          dmg_path=$(find ./artifacts/MirrorComment-macos -name "*.dmg")
+          deb_name=$(basename $deb_path)
+          msi_name=$(basename $msi_path)
+          dmg_name=$(basename $dmg_path)
+          echo "DEB_PATH=$deb_path" >> $GITHUB_ENV
+          echo "MSI_PATH=$msi_path" >> $GITHUB_ENV
+          echo "DMG_PATH=$dmg_path" >> $GITHUB_ENV
+          echo "DEB_NAME=$deb_name" >> $GITHUB_ENV
+          echo "MSI_NAME=$msi_name" >> $GITHUB_ENV
+          echo "DMG_NAME=$dmg_name" >> $GITHUB_ENV
 
-      - name: Download macos artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: MirrorComment-macos
-          path: .
-
-      - name: Extract version
+      - name: Resolve Version
         run: |
           version=$(grep 'packageVersion = ' build.gradle.kts | sed -n -e 's/^.*packageVersion = //p' | tr -d '"')
           echo "VERSION=$version" >> $GITHUB_ENV
 
-      - name: Create Release
+      - name: Create Draft Release
         id: create_release
         uses: actions/create-release@v1
         env:
@@ -88,7 +90,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./MirrorComment-ubuntu.deb
+          asset_path: ${{ env.DEB_PATH }}
+          asset_name: ${{ env.DEB_NAME }}
           asset_content_type: application/octet-stream
 
       - name: Upload windows artifact to release
@@ -97,7 +100,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./MirrorComment-windows.msi
+          asset_path: ${{ env.MSI_PATH }}
+          asset_name: ${{ env.MSI_NAME }}
           asset_content_type: application/octet-stream
 
       - name: Upload macos artifact to release
@@ -106,5 +110,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./MirrorComment-macos.dmg
+          asset_path: ${{ env.DMG_PATH }}
+          asset_name: ${{ env.DMG_NAME }}
           asset_content_type: application/octet-stream
