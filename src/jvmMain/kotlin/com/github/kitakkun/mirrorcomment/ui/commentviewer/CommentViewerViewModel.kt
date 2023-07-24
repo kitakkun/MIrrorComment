@@ -33,10 +33,9 @@ class CommentViewerViewModel(
     private val mutableReadUpCommentFlow = MutableSharedFlow<MirrativComment>()
 
     init {
-        try {
-            ktVoxApi = get { parametersOf(settingsPropertiesRepository.getVoiceVoxServerUrl()) }
-        } catch (e: Throwable) {
-            e.printStackTrace()
+        val url = settingsPropertiesRepository.getVoiceVoxServerUrl()
+        if (url != null) {
+            ktVoxApi = get { parametersOf(url) }
         }
 
         launch {
@@ -79,20 +78,16 @@ class CommentViewerViewModel(
     }
 
     fun applySettingsChanges() {
-        val voiceVoxServerUrl = settingsPropertiesRepository.getVoiceVoxServerUrl()
         speakingEnabled = settingsPropertiesRepository.getSpeakingEnabled()
-        try {
-            ktVoxApi = get { parametersOf(voiceVoxServerUrl) }
-            launch {
-                val speakers = ktVoxApi?.getSpeakers()?.body() ?: return@launch
-                speakerId = speakers.indexOfFirst { speaker ->
-                    speaker.speakerUuid == settingsPropertiesRepository.getSpeakerUUID()
-                }.coerceAtLeast(0)
-            }
-        } catch (e: Exception) {
-            launch {
-                mutableVoiceVoxErrorFlow.emit(Unit)
-            }
+        val url = settingsPropertiesRepository.getVoiceVoxServerUrl()
+        if (url != null) {
+            ktVoxApi = get { parametersOf(url) }
+        }
+        launch {
+            val speakers = ktVoxApi?.getSpeakers()?.body() ?: return@launch
+            speakerId = speakers.indexOfFirst { speaker ->
+                speaker.speakerUuid == settingsPropertiesRepository.getSpeakerUUID()
+            }.coerceAtLeast(0)
         }
     }
 }
