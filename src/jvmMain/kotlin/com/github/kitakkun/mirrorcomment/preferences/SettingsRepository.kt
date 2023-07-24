@@ -2,11 +2,10 @@ package com.github.kitakkun.mirrorcomment.preferences
 
 import java.io.File
 import java.io.FileReader
-import java.net.URL
 import java.util.*
 
 class SettingsRepository(
-    propertiesFilename: String = "settings.properties"
+    propertiesFilename: String = "settings.properties",
 ) {
     private val properties = Properties()
     private val propertiesFile = File(propertiesFilename)
@@ -22,14 +21,18 @@ class SettingsRepository(
     fun getVoiceVoxServerUrl(): String? {
         return try {
             val rawUrl = properties.getProperty("voiceVoxServerUrl", null)
-            URL(rawUrl)
-            rawUrl
+            if (rawUrl.isValidHttpOrHttpsUrl()) {
+                rawUrl
+            } else {
+                null
+            }
         } catch (e: Exception) {
             null
         }
     }
 
     fun setVoiceVoxServerUrl(url: String) {
+        if (!url.isValidHttpOrHttpsUrl()) return
         properties.setProperty("voiceVoxServerUrl", url)
         properties.store(propertiesFile.outputStream(), null)
     }
