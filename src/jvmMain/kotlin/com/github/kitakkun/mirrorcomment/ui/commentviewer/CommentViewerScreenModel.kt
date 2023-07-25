@@ -1,5 +1,6 @@
 package com.github.kitakkun.mirrorcomment.ui.commentviewer
 
+import cafe.adriel.voyager.core.model.ScreenModel
 import com.github.kitakkun.ktvox.api.KtVoxApi
 import com.github.kitakkun.mirrorcomment.AudioPlayer
 import com.github.kitakkun.mirrorcomment.coroutines.DefaultScope
@@ -16,9 +17,9 @@ import org.koin.core.parameter.parametersOf
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
-class CommentViewerViewModel(
+class CommentViewerScreenModel(
     private val player: AudioPlayer,
-) : CoroutineScope by DefaultScope(), KoinComponent {
+) : ScreenModel, CoroutineScope by DefaultScope(), KoinComponent {
     private val mutableUiState = MutableStateFlow(CommentViewerState(rawLiveUrl = ""))
     val uiState = mutableUiState.asStateFlow()
 

@@ -1,5 +1,6 @@
 package com.github.kitakkun.mirrorcomment.ui.settings
 
+import cafe.adriel.voyager.core.model.ScreenModel
 import com.github.kitakkun.ktvox.api.KtVoxApi
 import com.github.kitakkun.mirrorcomment.coroutines.DefaultScope
 import com.github.kitakkun.mirrorcomment.preferences.SettingsRepository
@@ -16,7 +17,7 @@ import org.koin.core.parameter.parametersOf
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
-class SettingsViewModel : KoinComponent, CoroutineScope by DefaultScope() {
+class SettingsScreenModel : ScreenModel, KoinComponent, CoroutineScope by DefaultScope() {
     private val settingsRepository: SettingsRepository by inject()
 
     private val mutableUiState = MutableStateFlow(SettingsState())
