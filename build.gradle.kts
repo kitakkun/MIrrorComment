@@ -1,5 +1,5 @@
-
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 plugins {
     kotlin("multiplatform")
@@ -100,6 +100,9 @@ detekt {
 
 ktlint {
     version.set(libs.versions.ktlint.asProvider())
+    reporters {
+        reporter(ReporterType.CHECKSTYLE)
+    }
     ignoreFailures.set(true)
     verbose.set(true)
 }
