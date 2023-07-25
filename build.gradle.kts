@@ -52,6 +52,8 @@ kotlin {
 
                 implementation(libs.multiplatform.settings)
                 implementation(libs.multiplatform.settings.test)
+                // need this to resolve Dispatcher.Main for Desktop
+                implementation(libs.coroutines.swing)
             }
         }
         val jvmTest by getting
