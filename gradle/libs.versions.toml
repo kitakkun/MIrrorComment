@@ -9,6 +9,10 @@ webdrivermanager = "5.4.1"
 compose-color-picker = "0.7.0"
 about-libraries = "10.8.3"
 coroutines = "1.7.2"
+detekt = "1.23.0"
+ktlint-gradle = "11.5.0"
+ktlint = "0.50.0"
+multiplatform-settings = "1.0.0"
 
 [libraries]
 selenium = { group = "org.seleniumhq.selenium", name = "selenium-java", version.ref = "selenium" }
@@ -26,8 +30,11 @@ compose-color-picker = { group = "com.godaddy.android.colorpicker", name = "comp
 compose-color-picker-jvm = { group = "com.godaddy.android.colorpicker", name = "compose-color-picker-jvm", version.ref = "compose-color-picker" }
 about-libraries-compose = { group = "com.mikepenz", name = "aboutlibraries-compose", version.ref = "about-libraries" }
 about-libraries-core = { group = "com.mikepenz", name = "aboutlibraries-core", version.ref = "about-libraries" }
-multiplatform-settings = { group = "com.russhwolf", name = "multiplatform-settings-no-arg", version = "1.0.0" }
+multiplatform-settings = { group = "com.russhwolf", name = "multiplatform-settings-no-arg", version.ref = "multiplatform-settings" }
+multiplatform-settings-test = { group = "com.russhwolf", name = "multiplatform-settings-test", version.ref = "multiplatform-settings" }
 coroutines-swing = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-swing", version.ref = "coroutines" }
 
 [plugins]
 about-libraries = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "about-libraries" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+ktlint-gradle = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint-gradle" }

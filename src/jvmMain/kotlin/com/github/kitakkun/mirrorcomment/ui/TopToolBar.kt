@@ -27,7 +27,7 @@ fun TopToolBar(
             value = liveUrl,
             onValueChange = onLiveUrlChange,
             label = { Text("ライブ配信のURL") },
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         )
         Spacer(modifier = Modifier.width(16.dp))
         Button(onClick = onClickStart) {

@@ -26,7 +26,7 @@ class LicenseScreen : Screen {
                         IconButton(onClick = { navigator?.pop() }) {
                             Icon(imageVector = Icons.Default.ArrowBackIos, contentDescription = null)
                         }
-                    }
+                    },
                 )
             },
         ) { innerPadding ->

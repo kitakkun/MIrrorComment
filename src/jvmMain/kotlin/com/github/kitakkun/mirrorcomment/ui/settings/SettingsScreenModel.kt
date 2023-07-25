@@ -97,4 +97,3 @@ class SettingsScreenModel : ScreenModel, KoinComponent {
         mutableUiState.update { it.copy(speakerUUID = speakerUUID) }
     }
 }
-
