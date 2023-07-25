@@ -1,25 +1,12 @@
 package com.github.kitakkun.mirrorcomment.preferences
 
-import org.junit.After
-import org.junit.Before
+import com.russhwolf.settings.MapSettings
 import org.junit.Test
-import java.io.File
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
 class SettingsRepositoryTest {
-    private lateinit var settingsRepository: SettingsRepository
-    private val propertiesFilename = "dummysettings.properties"
-
-    @Before
-    fun setUp() {
-        settingsRepository = SettingsRepository(propertiesFilename)
-    }
-
-    @After
-    fun tearDown() {
-        File(propertiesFilename).delete()
-    }
+    private val settingsRepository = SettingsRepository(MapSettings())
 
     @Test
     fun testVoiceVoxServerUrlConfig() {
@@ -28,8 +15,8 @@ class SettingsRepositoryTest {
         // set valid url
         settingsRepository.setVoiceVoxServerUrl("http://localhost:50021")
         assertEquals("http://localhost:50021", settingsRepository.getVoiceVoxServerUrl())
-        // set invalid url
+        // set invalid url (won't change the value)
         settingsRepository.setVoiceVoxServerUrl("invalid url")
-        assertNull(settingsRepository.getVoiceVoxServerUrl())
+        assertEquals("http://localhost:50021", settingsRepository.getVoiceVoxServerUrl())
     }
 }

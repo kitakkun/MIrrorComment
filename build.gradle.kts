@@ -49,7 +49,9 @@ kotlin {
                 implementation(libs.compose.color.picker.jvm)
                 implementation(libs.about.libraries.core)
                 implementation(libs.about.libraries.compose)
+
                 implementation(libs.multiplatform.settings)
+                implementation(libs.multiplatform.settings.test)
             }
         }
         val jvmTest by getting
