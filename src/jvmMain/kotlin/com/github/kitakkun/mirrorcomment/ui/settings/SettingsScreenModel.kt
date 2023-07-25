@@ -4,11 +4,13 @@ import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
 import com.github.kitakkun.ktvox.api.KtVoxApi
 import com.github.kitakkun.mirrorcomment.preferences.SettingsRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.component.inject
@@ -26,16 +28,18 @@ class SettingsScreenModel : ScreenModel, KoinComponent {
 
     private fun checkVoiceVoxServerStatus(url: String) {
         voiceVoxServerCheckJob?.cancel()
-        voiceVoxServerCheckJob = coroutineScope.async {
-            mutableUiState.update { it.copy(checkingVoiceVoxServer = true) }
+        mutableUiState.update { it.copy(checkingVoiceVoxServer = true) }
+        voiceVoxServerCheckJob = coroutineScope.async(Dispatchers.IO) {
             val ktVoxApi = get<Optional<KtVoxApi>> { parametersOf(url) }.getOrNull()
             if (ktVoxApi == null) {
-                mutableUiState.update {
-                    it.copy(
-                        checkingVoiceVoxServer = false,
-                        isVoiceVoxServerRunning = false,
-                        speakers = emptyList(),
-                    )
+                withContext(Dispatchers.Main) {
+                    mutableUiState.update {
+                        it.copy(
+                            checkingVoiceVoxServer = false,
+                            isVoiceVoxServerRunning = false,
+                            speakers = emptyList(),
+                        )
+                    }
                 }
                 return@async
             }
@@ -49,12 +53,14 @@ class SettingsScreenModel : ScreenModel, KoinComponent {
             } catch (e: Exception) {
                 emptyList()
             }
-            mutableUiState.update {
-                it.copy(
-                    checkingVoiceVoxServer = false,
-                    isVoiceVoxServerRunning = connectionAvailable,
-                    speakers = speakers,
-                )
+            withContext(Dispatchers.Main) {
+                mutableUiState.update {
+                    it.copy(
+                        checkingVoiceVoxServer = false,
+                        isVoiceVoxServerRunning = connectionAvailable,
+                        speakers = speakers,
+                    )
+                }
             }
         }
     }

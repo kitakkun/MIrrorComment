@@ -7,8 +7,10 @@ import com.github.kitakkun.mirrorcomment.AudioPlayer
 import com.github.kitakkun.mirrorcomment.model.MirrativComment
 import com.github.kitakkun.mirrorcomment.preferences.SettingsRepository
 import com.github.kitakkun.mirrorcomment.service.MirrativCommentRetrieveService
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.component.inject
@@ -45,7 +47,7 @@ class CommentViewerScreenModel(
             }
         }
 
-        coroutineScope.launch {
+        coroutineScope.launch(Dispatchers.IO) {
             mutableReadUpCommentFlow.collect {
                 if (!speakingEnabled) return@collect
                 val api = ktVoxApi.getOrNull() ?: return@collect
@@ -60,7 +62,9 @@ class CommentViewerScreenModel(
                     ).body() ?: return@collect
                     player.play(wave.bytes())
                 } catch (e: Throwable) {
-                    mutableSnackbarErrorFlow.emit("VOICEVOX: 音声合成に失敗しました")
+                    withContext(Dispatchers.Main) {
+                        mutableSnackbarErrorFlow.emit("VOICEVOX: 音声合成に失敗しました")
+                    }
                 }
             }
         }
@@ -89,7 +93,7 @@ class CommentViewerScreenModel(
         speakingEnabled = settingsRepository.getSpeakingEnabled()
         val url = settingsRepository.getVoiceVoxServerUrl()
         ktVoxApi = get { parametersOf(url) }
-        coroutineScope.launch {
+        coroutineScope.launch(Dispatchers.IO) {
             val speakers = ktVoxApi.getOrNull()?.getSpeakers()?.body() ?: return@launch
             speakerId = speakers.indexOfFirst { speaker ->
                 speaker.speakerUuid == settingsRepository.getSpeakerUUID()
