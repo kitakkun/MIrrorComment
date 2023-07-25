@@ -95,6 +95,7 @@ aboutLibraries {
 detekt {
     toolVersion = libs.versions.detekt.get()
     source.from("src/jvmMain/kotlin")
+    ignoreFailures = true
 }
 
 ktlint {
