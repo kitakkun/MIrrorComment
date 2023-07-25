@@ -31,7 +31,7 @@ fun CommentViewerView(
                 onLiveUrlChange = onUpdateLiveUrl,
                 onClickStart = onClickStart,
                 onClickSettings = onClickSettings,
-                modifier = Modifier.padding(8.dp)
+                modifier = Modifier.padding(8.dp),
             )
         },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
@@ -39,14 +39,14 @@ fun CommentViewerView(
     ) { innerPadding ->
         LazyColumn(
             contentPadding = innerPadding,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
         ) {
             items(uiState.comments.asReversed()) { comment ->
                 CommentItemView(
                     avatarUrl = comment.avatarUrl,
                     username = comment.username,
                     comment = comment.comment,
-                    modifier = Modifier.animateItemPlacement()
+                    modifier = Modifier.animateItemPlacement(),
                 )
                 Divider(modifier = Modifier.height(1.dp))
             }

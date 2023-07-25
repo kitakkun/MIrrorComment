@@ -91,4 +91,3 @@ class SettingsViewModel : KoinComponent, CoroutineScope by DefaultScope() {
         mutableUiState.update { it.copy(speakerUUID = speakerUUID) }
     }
 }
-

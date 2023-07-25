@@ -4,9 +4,9 @@ import com.russhwolf.settings.Settings
 import com.russhwolf.settings.get
 import com.russhwolf.settings.set
 
-class SettingsRepository {
+class SettingsRepository(
     private val settings: Settings = Settings()
-
+) {
     fun getVoiceVoxServerUrl(): String? {
         return try {
             val rawUrl = settings["voiceVoxServerUrl", ""]
