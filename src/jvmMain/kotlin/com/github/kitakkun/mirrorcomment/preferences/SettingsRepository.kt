@@ -5,7 +5,7 @@ import com.russhwolf.settings.get
 import com.russhwolf.settings.set
 
 class SettingsRepository(
-    private val settings: Settings = Settings()
+    private val settings: Settings = Settings(),
 ) {
     fun getVoiceVoxServerUrl(): String? {
         return try {
