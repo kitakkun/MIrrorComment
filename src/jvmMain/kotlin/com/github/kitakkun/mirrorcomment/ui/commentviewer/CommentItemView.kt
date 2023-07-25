@@ -31,7 +31,7 @@ fun CommentItemView(
             contentDescription = null,
             modifier = Modifier
                 .size(32.dp)
-                .clip(CircleShape)
+                .clip(CircleShape),
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(

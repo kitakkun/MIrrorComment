@@ -94,7 +94,7 @@ fun SettingsView(
                 }
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.alpha(if (uiState.speakingEnabled) 1f else 0.5f)
+                    modifier = Modifier.alpha(if (uiState.speakingEnabled) 1f else 0.5f),
                 ) {
                     Text(text = "VOICEVOXサーバーのURL")
                     Spacer(Modifier.weight(1f))
@@ -132,7 +132,7 @@ fun SettingsView(
                                     )
                                 }
                             }
-                        }
+                        },
                     )
                 }
                 Spacer(Modifier.height(8.dp))
@@ -142,7 +142,7 @@ fun SettingsView(
                     Text(text = "キャラクター")
                     Spacer(Modifier.weight(1f))
                     Box(
-                        contentAlignment = Alignment.TopCenter
+                        contentAlignment = Alignment.TopCenter,
                     ) {
                         Text(
                             text = uiState.speakers.find { it.speakerUuid == uiState.speakerUUID }?.name ?: "Not Found",
@@ -185,7 +185,7 @@ fun SettingsView(
                             navigator?.push(LicenseScreen())
                         }
                         .padding(vertical = 16.dp)
-                        .fillMaxWidth()
+                        .fillMaxWidth(),
                 ) {
                     Text(text = "OSSライセンス")
                     Spacer(Modifier.width(8.dp))

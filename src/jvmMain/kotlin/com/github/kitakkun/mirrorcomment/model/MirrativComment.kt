@@ -53,14 +53,14 @@ sealed interface MirrativComment {
                         id = commentId,
                         username = username,
                         comment = commentText,
-                        avatarUrl = avatarUrl
+                        avatarUrl = avatarUrl,
                     )
                 } else {
                     Normal(
                         id = commentId,
                         username = username,
                         comment = commentText,
-                        avatarUrl = avatarUrl
+                        avatarUrl = avatarUrl,
                     )
                 }
             } catch (e: Throwable) {

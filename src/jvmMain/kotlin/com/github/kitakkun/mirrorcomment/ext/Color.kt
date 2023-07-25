@@ -6,7 +6,7 @@ fun Color.toHexString(): String {
     return "#%02x%02x%02x".format(
         (this.red * 255).toInt(),
         (this.green * 255).toInt(),
-        (this.blue * 255).toInt()
+        (this.blue * 255).toInt(),
     )
 }
 
