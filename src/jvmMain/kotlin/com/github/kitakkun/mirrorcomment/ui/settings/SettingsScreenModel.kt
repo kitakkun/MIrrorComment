@@ -1,10 +1,9 @@
 package com.github.kitakkun.mirrorcomment.ui.settings
 
 import cafe.adriel.voyager.core.model.ScreenModel
+import cafe.adriel.voyager.core.model.coroutineScope
 import com.github.kitakkun.ktvox.api.KtVoxApi
-import com.github.kitakkun.mirrorcomment.coroutines.DefaultScope
 import com.github.kitakkun.mirrorcomment.preferences.SettingsRepository
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,7 +16,7 @@ import org.koin.core.parameter.parametersOf
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
-class SettingsScreenModel : ScreenModel, KoinComponent, CoroutineScope by DefaultScope() {
+class SettingsScreenModel : ScreenModel, KoinComponent {
     private val settingsRepository: SettingsRepository by inject()
 
     private val mutableUiState = MutableStateFlow(SettingsState())
@@ -27,7 +26,7 @@ class SettingsScreenModel : ScreenModel, KoinComponent, CoroutineScope by Defaul
 
     private fun checkVoiceVoxServerStatus(url: String) {
         voiceVoxServerCheckJob?.cancel()
-        voiceVoxServerCheckJob = async {
+        voiceVoxServerCheckJob = coroutineScope.async {
             mutableUiState.update { it.copy(checkingVoiceVoxServer = true) }
             val ktVoxApi = get<Optional<KtVoxApi>> { parametersOf(url) }.getOrNull()
             if (ktVoxApi == null) {

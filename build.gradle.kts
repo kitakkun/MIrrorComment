@@ -47,6 +47,9 @@ kotlin {
                 implementation(libs.about.libraries.core)
                 implementation(libs.about.libraries.compose)
                 implementation(libs.multiplatform.settings)
+
+                // need this to resolve Dispatcher.Main for Desktop
+                implementation(libs.coroutines.swing)
             }
         }
         val jvmTest by getting
