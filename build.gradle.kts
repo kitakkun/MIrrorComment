@@ -1,12 +1,12 @@
-import org.gradle.internal.impldep.org.testng.reporters.XMLUtils.xml
+
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.storage.CacheResetOnProcessCanceled.enabled
 
 plugins {
     kotlin("multiplatform")
     id("org.jetbrains.compose")
     alias(libs.plugins.about.libraries)
     alias(libs.plugins.detekt)
+    alias(libs.plugins.ktlint.gradle)
 }
 
 group = "com.github.kitakkun.mirrorcomment"
@@ -95,4 +95,10 @@ aboutLibraries {
 detekt {
     toolVersion = libs.versions.detekt.get()
     source.from("src/jvmMain/kotlin")
+}
+
+ktlint {
+    version.set(libs.versions.ktlint.asProvider())
+    ignoreFailures.set(true)
+    verbose.set(true)
 }
