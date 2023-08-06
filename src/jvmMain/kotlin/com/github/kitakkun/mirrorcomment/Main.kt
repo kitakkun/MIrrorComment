@@ -9,16 +9,13 @@ import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import cafe.adriel.voyager.navigator.Navigator
 import com.github.kitakkun.mirrorcomment.di.mirrorCommentModule
-import com.github.kitakkun.mirrorcomment.ui.commentviewer.CommentViewerScreen
-import io.github.bonigarcia.wdm.WebDriverManager
+import com.github.kitakkun.mirrorcomment.ui.init.InitScreen
 import org.koin.core.context.startKoin
 
 fun main() = application {
     startKoin {
         modules(mirrorCommentModule)
     }
-
-    WebDriverManager.chromedriver().setup()
 
     Window(
         title = "MirrorComment",
@@ -27,7 +24,7 @@ fun main() = application {
     ) {
         MaterialTheme {
             Surface {
-                Navigator(CommentViewerScreen())
+                Navigator(InitScreen())
             }
         }
     }
