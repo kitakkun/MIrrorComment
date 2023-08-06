@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.kitakkun.mirrorcomment.ui.commentviewer.CommentViewerScreen
 import io.github.bonigarcia.wdm.WebDriverManager
 import kotlinx.coroutines.delay
@@ -16,7 +17,7 @@ class SplashScreen : Screen {
 
     @Composable
     override fun Content() {
-        val navigator = LocalNavigator.current
+        val navigator = LocalNavigator.currentOrThrow
 
         LaunchedEffect(Unit) {
             launch {
@@ -27,7 +28,7 @@ class SplashScreen : Screen {
                 if (timeElapsed < MINIMUM_WAIT_TIME) {
                     delay(MINIMUM_WAIT_TIME - timeElapsed)
                 }
-                navigator?.push(CommentViewerScreen())
+                navigator.push(CommentViewerScreen())
             }
         }
 
