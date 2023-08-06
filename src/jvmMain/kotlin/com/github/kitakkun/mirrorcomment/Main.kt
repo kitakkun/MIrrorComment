@@ -9,7 +9,7 @@ import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import cafe.adriel.voyager.navigator.Navigator
 import com.github.kitakkun.mirrorcomment.di.mirrorCommentModule
-import com.github.kitakkun.mirrorcomment.ui.init.InitScreen
+import com.github.kitakkun.mirrorcomment.ui.splash.SplashScreen
 import org.koin.core.context.startKoin
 
 fun main() = application {
@@ -24,7 +24,7 @@ fun main() = application {
     ) {
         MaterialTheme {
             Surface {
-                Navigator(InitScreen())
+                Navigator(SplashScreen())
             }
         }
     }

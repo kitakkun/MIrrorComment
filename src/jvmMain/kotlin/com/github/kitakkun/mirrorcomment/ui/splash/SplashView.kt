@@ -1,4 +1,4 @@
-package com.github.kitakkun.mirrorcomment.ui.init
+package com.github.kitakkun.mirrorcomment.ui.splash
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Arrangement
@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.github.kitakkun.mirrorcomment.BuildConfig
 
 @Composable
-fun InitView() {
+fun SplashView() {
     Column(
         modifier = Modifier.fillMaxSize().padding(16.dp),
         verticalArrangement = Arrangement.Center,
@@ -69,6 +69,6 @@ fun InitView() {
 
 @Preview
 @Composable
-private fun InitViewPreview() {
-    InitView()
+private fun SplashViewPreview() {
+    SplashView()
 }

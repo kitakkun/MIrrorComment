@@ -1,4 +1,4 @@
-package com.github.kitakkun.mirrorcomment.ui.init
+package com.github.kitakkun.mirrorcomment.ui.splash
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -9,7 +9,7 @@ import io.github.bonigarcia.wdm.WebDriverManager
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class InitScreen : Screen {
+class SplashScreen : Screen {
     companion object {
         private const val MINIMUM_WAIT_TIME = 1500L
     }
@@ -30,6 +30,6 @@ class InitScreen : Screen {
             }
         }
 
-        InitView()
+        SplashView()
     }
 }
