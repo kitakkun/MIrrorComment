@@ -13,6 +13,7 @@ class SplashScreen : Screen {
     companion object {
         private const val MINIMUM_WAIT_TIME = 1500L
     }
+
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.current
