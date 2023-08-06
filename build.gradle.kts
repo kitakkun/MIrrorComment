@@ -1,4 +1,5 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 plugins {
@@ -11,6 +12,10 @@ plugins {
 
 group = "com.github.kitakkun.mirrorcomment"
 version = "1.0-SNAPSHOT"
+
+val appName = "MirrorComment"
+val appVersion = "1.0.0"
+val generatedSrcDir = "${project.buildDir.path}/generated/source/kotlin"
 
 repositories {
     google()
@@ -27,6 +32,7 @@ kotlin {
 
     sourceSets {
         val jvmMain by getting {
+            kotlin.srcDir(generatedSrcDir)
             dependencies {
                 implementation(compose.desktop.currentOs)
                 implementation(libs.selenium)
@@ -70,8 +76,8 @@ compose.desktop {
         mainClass = "com.github.kitakkun.mirrorcomment.MainKt"
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "MirrorComment"
-            packageVersion = "1.0.0"
+            packageName = appName
+            packageVersion = appVersion
             // ref: https://stackoverflow.com/questions/61727613/unexpected-behaviour-from-gson/74914488#74914488
             modules("jdk.unsupported")
             macOS {
@@ -98,6 +104,7 @@ aboutLibraries {
 
 detekt {
     toolVersion = libs.versions.detekt.get()
+    config.from("detekt.yml")
     source.from("src/jvmMain/kotlin")
     ignoreFailures = true
 }
@@ -109,4 +116,26 @@ ktlint {
     }
     ignoreFailures.set(true)
     verbose.set(true)
+}
+
+// generate BuildConfig class to access application meta-data from source code.
+task("generateBuildConfigClass") {
+    doLast {
+        val content = """
+            package ${project.group}
+            
+            object BuildConfig {
+                const val VERSION_NAME = "$appVersion"
+                const val APP_NAME = "$appName"
+            }
+        """.trimIndent()
+
+        val file = file("$generatedSrcDir/${project.group.toString().replace(".", "/")}/BuildConfig.kt")
+        file.parentFile.mkdirs()
+        file.writeText(content)
+    }
+}
+
+tasks.withType<KotlinCompile>().configureEach {
+    dependsOn("generateBuildConfigClass")
 }
