@@ -104,6 +104,7 @@ aboutLibraries {
 
 detekt {
     toolVersion = libs.versions.detekt.get()
+    config.from("detekt.yml")
     source.from("src/jvmMain/kotlin")
     ignoreFailures = true
 }
